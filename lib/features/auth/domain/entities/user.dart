@@ -8,6 +8,7 @@ class User extends Equatable {
   final String role;
   final String position;
   final String department;
+  final String faceEmbedding;
 
   const User({
     required this.id,
@@ -17,6 +18,7 @@ class User extends Equatable {
     required this.role,
     required this.position,
     required this.department,
+    required this.faceEmbedding,
   });
 
   @override
@@ -29,6 +31,7 @@ class User extends Equatable {
       role,
       position,
       department,
+      faceEmbedding,
     ];
   }
 }

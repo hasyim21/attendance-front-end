@@ -30,6 +30,7 @@ class LogoutBloc extends Bloc<LogoutEvent, LogoutState> {
         (r) async {
           emit(LogoutSuccess(result: r));
           await authLocalDatasource.deleteToken();
+          await authLocalDatasource.deleteUser();
         },
       );
     });

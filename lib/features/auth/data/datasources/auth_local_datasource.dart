@@ -2,15 +2,17 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/auth_model.dart';
+import '../models/user_model.dart';
 
 abstract class AuthLocalDatasource {
   Future<void> setToken(String token);
-  Future<String> getToken();
+  Future<String?> getToken();
   Future<bool> deleteToken();
   Future<bool> isAuth();
-  Future<void> setUser(AuthModel user);
-  Future<AuthModel> getUser();
+  Future<void> setUser(UserModel userModel);
+  Future<bool> deleteUser();
+  Future<UserModel?> getUser();
+  Future<void> updateFaceEmbedding(String faceEmbedding);
 }
 
 class AuthLocalDatasourceImpl extends AuthLocalDatasource {
@@ -24,8 +26,13 @@ class AuthLocalDatasourceImpl extends AuthLocalDatasource {
   }
 
   @override
-  Future<String> getToken() async {
-    return prefs.getString('token') ?? '';
+  Future<String?> getToken() async {
+    final token = prefs.getString('token');
+    if (token != null) {
+      return token;
+    } else {
+      return null;
+    }
   }
 
   @override
@@ -34,23 +41,37 @@ class AuthLocalDatasourceImpl extends AuthLocalDatasource {
   }
 
   @override
-  Future<void> setUser(AuthModel user) async {
-    await prefs.setString('user', json.encode(user.toJson()));
+  Future<void> setUser(UserModel userModel) async {
+    await prefs.setString('user', json.encode(userModel.toJson()));
   }
 
   @override
-  Future<AuthModel> getUser() async {
-    final userString = prefs.getString('user');
-    if (userString != null && userString.isNotEmpty) {
-      return AuthModel.fromJson(json.decode(userString));
+  Future<UserModel?> getUser() async {
+    final user = prefs.getString('user');
+    if (user != null) {
+      return UserModel.fromJson(json.decode(user));
     } else {
-      return AuthModel.initial();
+      return null;
+    }
+  }
+
+  @override
+  Future<bool> deleteUser() async {
+    return await prefs.remove('user');
+  }
+
+  @override
+  Future<void> updateFaceEmbedding(String faceEmbedding) async {
+    UserModel? user = await getUser();
+    if (user != null) {
+      user = user.copyWith(faceEmbedding: faceEmbedding);
+      await setUser(user);
     }
   }
 
   @override
   Future<bool> isAuth() async {
     final token = await getToken();
-    return token.isNotEmpty;
+    return token != null;
   }
 }

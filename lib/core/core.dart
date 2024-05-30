@@ -1,6 +1,12 @@
 export 'assets/assets.gen.dart';
-export 'constants/constants.dart';
-export 'failure/failure.dart';
-export 'extensions/extensions.dart';
 export 'styles/colors.dart';
+export 'styles/theme.dart';
+export 'utils/constants/constants.dart';
+export 'utils/extensions/extensions.dart';
+export 'utils/failure/failure.dart';
+export 'utils/ml_kit/recognition_embedding.dart';
+export 'utils/ml_kit/recognizer.dart';
+export 'utils/services/camera_service.dart';
+export 'utils/services/image_service.dart';
+export 'utils/services/location_service.dart';
 export 'widgets/widgets.dart';

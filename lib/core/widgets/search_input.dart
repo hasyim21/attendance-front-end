@@ -20,7 +20,7 @@ class SearchInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: MyColors.white,
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: TextFormField(
@@ -32,7 +32,7 @@ class SearchInput extends StatelessWidget {
           hintText: hintText,
           prefixIcon: const Icon(
             Icons.search,
-            color: AppColors.primary,
+            color: MyColors.primary,
           ),
           contentPadding: const EdgeInsets.all(16.0),
           border: OutlineInputBorder(

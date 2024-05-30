@@ -11,6 +11,7 @@ class UserModel extends User {
     required super.role,
     required super.position,
     required super.department,
+    required super.faceEmbedding,
   });
 
   factory UserModel.fromJson(String str) => UserModel.fromMap(json.decode(str));
@@ -25,6 +26,7 @@ class UserModel extends User {
         role: json["role"],
         position: json["position"],
         department: json["department"],
+        faceEmbedding: json["face_embedding"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -35,7 +37,30 @@ class UserModel extends User {
         "role": role,
         "position": position,
         "department": department,
+        "face_embedding": faceEmbedding,
       };
+
+  UserModel copyWith({
+    int? id,
+    String? name,
+    String? email,
+    String? phone,
+    String? role,
+    String? position,
+    String? department,
+    String? faceEmbedding,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      role: role ?? this.role,
+      position: position ?? this.position,
+      department: department ?? this.department,
+      faceEmbedding: faceEmbedding ?? this.faceEmbedding,
+    );
+  }
 
   @override
   List<Object> get props {
@@ -47,6 +72,12 @@ class UserModel extends User {
       role,
       position,
       department,
+      faceEmbedding,
     ];
+  }
+
+  @override
+  String toString() {
+    return 'UserModel(id: $id, name: $name, email: $email, phone: $phone, role: $role, position: $position, department: $department, faceEmbedding: $faceEmbedding)';
   }
 }

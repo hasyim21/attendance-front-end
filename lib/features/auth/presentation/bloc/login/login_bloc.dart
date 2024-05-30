@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../../../../core/core.dart';
 import '../../../data/datasources/auth_local_datasource.dart';
+import '../../../data/models/user_model.dart';
 import '../../../domain/entities/auth.dart';
 import '../../../domain/usecases/login.dart';
 
@@ -33,7 +34,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         ),
         (r) async {
           emit(LoginSuccess(result: r));
+          final user = r.user;
+          final userModel = UserModel(
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+            position: user.position,
+            department: user.department,
+            faceEmbedding: user.faceEmbedding,
+          );
           await authLocalDatasource.setToken(r.token);
+          await authLocalDatasource.setUser(userModel);
         },
       );
     });

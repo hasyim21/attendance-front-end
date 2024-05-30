@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'core/core.dart';
 import 'features/auth/presentation/pages/splash_page.dart';
 
 class App extends StatelessWidget {
@@ -12,10 +13,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Attendance',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: MyTheme.light,
       home: const SplashPage(),
     );
   }

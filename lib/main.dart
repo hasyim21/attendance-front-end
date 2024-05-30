@@ -1,22 +1,18 @@
-import 'package:attendance_front_end/features/auth/domain/usecases/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
-import 'features/auth/data/datasources/auth_local_datasource.dart';
-import 'features/auth/data/datasources/auth_remote_datasource.dart';
-import 'features/auth/data/repositories/profile_repository_impl.dart';
-import 'features/auth/domain/usecases/is_auth.dart';
-import 'features/auth/domain/usecases/logout.dart';
-import 'features/auth/presentation/bloc/auth/auth_bloc.dart';
-import 'features/auth/presentation/bloc/login/login_bloc.dart';
-import 'features/auth/presentation/bloc/logout/logout_bloc.dart';
+import 'core/providers.dart';
+
+late SharedPreferences prefs;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final prefs = await SharedPreferences.getInstance();
+  await initializeDateFormatting('id_ID', null);
+  prefs = await SharedPreferences.getInstance();
   final authLocalDatasource = AuthLocalDatasourceImpl(prefs: prefs);
   runApp(
     MyApp(authLocalDatasource: authLocalDatasource),
@@ -39,6 +35,14 @@ class MyApp extends StatelessWidget {
               authLocalDatasource: authLocalDatasource,
             ),
             authLocalDatasource: authLocalDatasource,
+          ),
+        ),
+        RepositoryProvider(
+          create: (context) => AttendanceRepositoryImpl(
+            attendanceRemoteDatasource: AttendanceRemoteDatasourceImpl(
+              client: http.Client(),
+              authLocalDatasource: authLocalDatasource,
+            ),
           ),
         ),
       ],
@@ -65,6 +69,42 @@ class MyApp extends StatelessWidget {
                 authRepository: context.read<AuthRepositoryImpl>(),
               ),
               authLocalDatasource: authLocalDatasource,
+            ),
+          ),
+          BlocProvider(
+            create: (context) => UpdateFaceEmbeddingBloc(
+              updateFaceEmbedding: UpdateFaceEmbedding(
+                attendanceRepository: context.read<AttendanceRepositoryImpl>(),
+              ),
+              authLocalDatasource: authLocalDatasource,
+            ),
+          ),
+          BlocProvider(
+            create: (context) => GetCompanyBloc(
+              getCompany: GetCompany(
+                attendanceRepository: context.read<AttendanceRepositoryImpl>(),
+              ),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => CheckAttendanceBloc(
+              checkAttendance: CheckAttendance(
+                attendanceRepository: context.read<AttendanceRepositoryImpl>(),
+              ),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => CheckInBloc(
+              checkIn: CheckIn(
+                attendanceRepository: context.read<AttendanceRepositoryImpl>(),
+              ),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => CheckOutBloc(
+              checkOut: CheckOut(
+                attendanceRepository: context.read<AttendanceRepositoryImpl>(),
+              ),
             ),
           ),
         ],

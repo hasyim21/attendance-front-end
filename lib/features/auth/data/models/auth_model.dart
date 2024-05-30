@@ -25,21 +25,11 @@ class AuthModel extends Auth {
         "token": token,
       };
 
-  factory AuthModel.initial() {
-    return const AuthModel(
-      userModel: UserModel(
-        id: 0,
-        name: '-',
-        email: '-',
-        phone: '-',
-        role: '-',
-        position: '-',
-        department: '-',
-      ),
-      token: '-',
-    );
-  }
-
   @override
   List<Object> get props => [user, token];
+
+  @override
+  String toString() {
+    return 'AuthModel(token: $token, id: $userModel.id, name: $userModel.name, email: $userModel.email, phone: $userModel.phone, role: $userModel.role, position: $userModel.position, department: $userModel.department, faceEmbedding: $userModel.faceEmbedding)';
+  }
 }

@@ -1,11 +1,10 @@
-import 'package:attendance_front_end/features/auth/presentation/bloc/login/login_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../core/core.dart';
 import '../../../home/presentation/pages/main_page.dart';
+import '../bloc/login/login_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -79,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
                 suffixIcon: IconButton(
                   icon: Icon(
                     isShowPassword ? Icons.visibility_off : Icons.visibility,
-                    color: AppColors.grey,
+                    color: MyColors.grey,
                   ),
                   onPressed: () {
                     setState(() {
