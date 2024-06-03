@@ -34,4 +34,9 @@ class Company extends Equatable {
       timeOut,
     ];
   }
+
+  @override
+  String toString() {
+    return 'Company(name: $name, email: $email, address: $address, latitude: $latitude, longitude: $longitude, radiusKm: $radiusKm, timeIn: $timeIn, timeOut: $timeOut)';
+  }
 }

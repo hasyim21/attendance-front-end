@@ -31,4 +31,9 @@ class Attendance extends Equatable {
       latlonOut,
     ];
   }
+
+  @override
+  String toString() {
+    return 'Attendance(id: $id, userId: $userId, date: $date, timeIn: $timeIn, timeOut: $timeOut, latlonIn: $latlonIn, latlonOut: $latlonOut)';
+  }
 }

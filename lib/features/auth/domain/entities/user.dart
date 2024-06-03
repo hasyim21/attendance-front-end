@@ -34,4 +34,9 @@ class User extends Equatable {
       faceEmbedding,
     ];
   }
+
+  @override
+  String toString() {
+    return 'User(id: $id, name: $name, email: $email, phone: $phone, role: $role, position: $position, department: $department, faceEmbedding: $faceEmbedding)';
+  }
 }

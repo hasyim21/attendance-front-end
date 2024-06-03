@@ -9,6 +9,7 @@ import 'auth_local_datasource.dart';
 abstract class AuthRemoteDatasource {
   Future<AuthModel> login(String email, String password);
   Future<String> logout();
+  Future<void> updateFcmToken(String fcmToken);
 }
 
 class AuthRemoteDatasourceImpl extends AuthRemoteDatasource {
@@ -23,7 +24,10 @@ class AuthRemoteDatasourceImpl extends AuthRemoteDatasource {
   @override
   Future<AuthModel> login(String email, String password) async {
     final url = Uri.parse('$mainUrl/login');
-    final headers = {'Content-Type': 'application/json'};
+    final headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
 
     final response = await client.post(
       url,
@@ -61,5 +65,25 @@ class AuthRemoteDatasourceImpl extends AuthRemoteDatasource {
     } else {
       throw Failure(message: 'Failed to logout');
     }
+  }
+
+  @override
+  Future<void> updateFcmToken(String fcmToken) async {
+    final token = await authLocalDatasource.getToken();
+
+    final url = Uri.parse('$mainUrl/update-fcm-token');
+    final headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+
+    await client.post(
+      url,
+      headers: headers,
+      body: json.encode({
+        'fcm_token': fcmToken,
+      }),
+    );
   }
 }

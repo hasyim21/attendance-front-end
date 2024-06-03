@@ -26,7 +26,7 @@ class UserModel extends User {
         role: json["role"],
         position: json["position"],
         department: json["department"],
-        faceEmbedding: json["face_embedding"],
+        faceEmbedding: json["face_embedding"] ?? '',
       );
 
   Map<String, dynamic> toMap() => {

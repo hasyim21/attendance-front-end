@@ -11,4 +11,8 @@ class AttendanceStatus extends Equatable {
 
   @override
   List<Object> get props => [checkedin, checkedout];
+
+  @override
+  String toString() =>
+      'AttendanceStatus(checkedin: $checkedin, checkedout: $checkedout)';
 }

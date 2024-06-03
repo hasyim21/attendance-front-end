@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../permission/presentation/pages/permission_page.dart';
 import 'home_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -21,7 +22,7 @@ class _MainPageState extends State<MainPage> {
   final _pages = [
     const HomePage(),
     const Center(child: Text('Halaman Riwayat')),
-    const Center(child: Text('Halaman Izin')),
+    const PermissionPage(),
     const Center(child: Text('Halaman Profil')),
   ];
 

@@ -1,4 +1,5 @@
 export 'assets/assets.gen.dart';
+export 'providers/providers.dart';
 export 'styles/colors.dart';
 export 'styles/theme.dart';
 export 'utils/constants/constants.dart';
@@ -9,4 +10,5 @@ export 'utils/ml_kit/recognizer.dart';
 export 'utils/services/camera_service.dart';
 export 'utils/services/image_service.dart';
 export 'utils/services/location_service.dart';
+export 'utils/services/notification_service.dart';
 export 'widgets/widgets.dart';
