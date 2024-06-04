@@ -20,4 +20,6 @@ abstract class AttendanceRepository {
     String longitude,
   );
   Future<Either<Failure, AttendanceStatus>> checkAttendance();
+
+  Future<Either<Failure, List<Attendance>>> getAttendanceHistory(String date);
 }

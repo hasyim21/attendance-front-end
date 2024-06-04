@@ -15,6 +15,7 @@ abstract class AttendanceRemoteDatasource {
   Future<AttendanceModel> checkIn(String latitude, String longitude);
   Future<AttendanceModel> checkOut(String latitude, String longitude);
   Future<AttendanceStatusModel> checkAttendance();
+  Future<List<AttendanceModel>> getAttendanceHistory(String date);
 }
 
 class AttendanceRemoteDatasourceImpl extends AttendanceRemoteDatasource {
@@ -137,6 +138,31 @@ class AttendanceRemoteDatasourceImpl extends AttendanceRemoteDatasource {
 
     if (response.statusCode == 200) {
       return AttendanceStatusModel.fromJson(response.body);
+    } else {
+      throw Failure(message: json.decode(response.body)['message']);
+    }
+  }
+
+  @override
+  Future<List<AttendanceModel>> getAttendanceHistory(String date) async {
+    final token = await authLocalDatasource.getToken();
+    final url = Uri.parse('$mainUrl/attendance-history?date=$date');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+
+    final response = await client.get(
+      url,
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      final body = json.decode(response.body);
+      final data = body['data'] as List;
+      final histories =
+          data.map((e) => AttendanceModel.fromDataMap(e)).toList();
+      return histories;
     } else {
       throw Failure(message: json.decode(response.body)['message']);
     }

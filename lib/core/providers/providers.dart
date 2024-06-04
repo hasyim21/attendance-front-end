@@ -7,11 +7,13 @@ import '../../features/attendance/data/repositories/attendance_repository_impl.d
 import '../../features/attendance/domain/usecases/check_attendance.dart';
 import '../../features/attendance/domain/usecases/check_in.dart';
 import '../../features/attendance/domain/usecases/check_out.dart';
+import '../../features/attendance/domain/usecases/get_attendance_history.dart';
 import '../../features/attendance/domain/usecases/get_company.dart';
 import '../../features/attendance/domain/usecases/update_face_embedding.dart';
 import '../../features/attendance/presentation/bloc/check_attendance/check_attendance_bloc.dart';
 import '../../features/attendance/presentation/bloc/check_in/check_in_bloc.dart';
 import '../../features/attendance/presentation/bloc/check_out/check_out_bloc.dart';
+import '../../features/attendance/presentation/bloc/get_attendance_history/get_attendance_history_bloc.dart';
 import '../../features/attendance/presentation/bloc/get_company/get_company_bloc.dart';
 import '../../features/attendance/presentation/bloc/update_face_embedding/update_face_embedding_bloc.dart';
 import '../../features/auth/data/datasources/auth_local_datasource.dart';
@@ -127,6 +129,13 @@ class Providers extends StatelessWidget {
           BlocProvider(
             create: (context) => CheckOutBloc(
               checkOut: CheckOut(
+                attendanceRepository: context.read<AttendanceRepositoryImpl>(),
+              ),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => GetAttendanceHistoryBloc(
+              getAttendanceHistory: GetAttendanceHistory(
                 attendanceRepository: context.read<AttendanceRepositoryImpl>(),
               ),
             ),

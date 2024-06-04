@@ -48,8 +48,6 @@ class _PermissionPageState extends State<PermissionPage> {
 
     final fcmToken = await firebaseMessaging.getToken();
 
-    print('FCM Token: $fcmToken');
-
     if (await AuthLocalDatasourceImpl(prefs: prefs).getUser() != null) {
       AuthRemoteDatasourceImpl(
               client: http.Client(),

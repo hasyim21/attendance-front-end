@@ -31,6 +31,18 @@ class AttendanceModel extends Attendance {
     );
   }
 
+  factory AttendanceModel.fromDataMap(Map<String, dynamic> json) {
+    return AttendanceModel(
+      id: json["id"],
+      userId: json["user_id"],
+      date: json["date"] ?? "-",
+      timeIn: json["time_in"] ?? "-",
+      timeOut: json["time_out"] ?? "-",
+      latlonIn: json["latlon_in"] ?? "-",
+      latlonOut: json["latlon_out"] ?? "-",
+    );
+  }
+
   Map<String, dynamic> toMap() => {
         "attendance": {
           "id": id,

@@ -8,6 +8,10 @@ class MyTheme {
     appBarTheme: const AppBarTheme(
       backgroundColor: MyColors.primary,
       surfaceTintColor: Colors.transparent,
+      titleTextStyle: TextStyle(
+        fontSize: 20,
+        color: MyColors.white,
+      ),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       type: BottomNavigationBarType.fixed,
