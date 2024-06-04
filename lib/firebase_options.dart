@@ -53,10 +53,10 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: '',
-    appId: '',
-    messagingSenderId: '',
-    projectId: '',
-    storageBucket: '',
+    apiKey: 'AIzaSyC2sHigRH6Ir9QiFJ0gzW78Ev4C3ICb2bw',
+    appId: '1:700885039556:android:37879ad54cbffc701c8c91',
+    messagingSenderId: '700885039556',
+    projectId: 'attendance-19720',
+    storageBucket: 'attendance-19720.appspot.com',
   );
 }

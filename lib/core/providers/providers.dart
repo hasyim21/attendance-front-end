@@ -25,6 +25,12 @@ import '../../features/auth/domain/usecases/logout.dart';
 import '../../features/auth/presentation/bloc/auth/auth_bloc.dart';
 import '../../features/auth/presentation/bloc/login/login_bloc.dart';
 import '../../features/auth/presentation/bloc/logout/logout_bloc.dart';
+import '../../features/note/data/datasources/note_remote_datasource.dart';
+import '../../features/note/data/repositories/note_repository_impl.dart';
+import '../../features/note/domain/usecases/add_note.dart';
+import '../../features/note/domain/usecases/get_notes.dart';
+import '../../features/note/presentation/bloc/add_note/add_note_bloc.dart';
+import '../../features/note/presentation/bloc/get_notes/get_notes_bloc.dart';
 import '../../features/permission/data/datasources/permission_remote_datasource.dart';
 import '../../features/permission/data/repositories/permission_repository_impl.dart';
 import '../../features/permission/domain/usecases/add_permission.dart';
@@ -66,6 +72,14 @@ class Providers extends StatelessWidget {
         RepositoryProvider(
           create: (context) => PermissionRepositoryImpl(
             permissionRemoteDatasource: PermissionRemoteDatasourceImpl(
+              client: client,
+              authLocalDatasource: authLocalDatasource,
+            ),
+          ),
+        ),
+        RepositoryProvider(
+          create: (context) => NoteRepositoryImpl(
+            noteRemoteDatasource: NoteRemoteDatasourceImpl(
               client: client,
               authLocalDatasource: authLocalDatasource,
             ),
@@ -144,6 +158,20 @@ class Providers extends StatelessWidget {
             create: (context) => PermissionBloc(
               addPermission: AddPermission(
                 permissionRepository: context.read<PermissionRepositoryImpl>(),
+              ),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => GetNotesBloc(
+              GetNotes(
+                noteRepository: context.read<NoteRepositoryImpl>(),
+              ),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => AddNoteBloc(
+              AddNote(
+                noteRepository: context.read<NoteRepositoryImpl>(),
               ),
             ),
           ),

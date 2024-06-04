@@ -5,8 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/core.dart';
 import '../bloc/get_attendance_history/get_attendance_history_bloc.dart';
-import '../widgets/history_attendace.dart';
-import '../widgets/history_location.dart';
+import '../widgets/attendace_history_item.dart';
 
 class AttendanceHistoryPage extends StatefulWidget {
   const AttendanceHistoryPage({super.key});
@@ -34,7 +33,7 @@ class _AttendanceHistoryPageState extends State<AttendanceHistoryPage> {
         title: const Text('History'),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(18.0),
+        padding: const EdgeInsets.all(8.0),
         children: [
           EasyDateTimeLine(
             initialDate: DateTime.now(),
@@ -87,26 +86,19 @@ class _AttendanceHistoryPageState extends State<AttendanceHistoryPage> {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    HistoryAttendance(
+                    AttendanceHistoryItem(
                       statusAbsen: 'Datang',
                       time: attendance.timeIn,
                       date: attendance.date.toString(),
-                    ),
-                    const SpaceHeight(10.0),
-                    HistoryLocation(
                       latitude: latitudeIn,
                       longitude: longitudeIn,
                     ),
-                    const SpaceHeight(25),
-                    HistoryAttendance(
+                    const SpaceHeight(16.0),
+                    AttendanceHistoryItem(
                       statusAbsen: 'Pulang',
-                      isAttendanceIn: false,
+                      isCheckIn: false,
                       time: attendance.timeOut,
                       date: attendance.date.toString(),
-                    ),
-                    const SpaceHeight(10.0),
-                    HistoryLocation(
-                      isAttendance: false,
                       latitude: latitudeOut,
                       longitude: longitudeOut,
                     ),

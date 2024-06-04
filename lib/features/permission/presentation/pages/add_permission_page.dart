@@ -25,9 +25,9 @@ class _AddPermissionPageState extends State<AddPermissionPage> {
 
   @override
   void initState() {
+    super.initState();
     dateController = TextEditingController();
     reasonController = TextEditingController();
-    super.initState();
   }
 
   Future<void> _pickImage() async {
@@ -49,6 +49,13 @@ class _AddPermissionPageState extends State<AddPermissionPage> {
     final dateFormatter = DateFormat('yyyy-MM-dd');
     // Kembalikan tanggal dalam format yang dinginkan
     return dateFormatter.format(date);
+  }
+
+  @override
+  void dispose() {
+    dateController.dispose();
+    reasonController.dispose();
+    super.dispose();
   }
 
   @override

@@ -9,7 +9,7 @@ class MyTheme {
       backgroundColor: MyColors.primary,
       surfaceTintColor: Colors.transparent,
       titleTextStyle: TextStyle(
-        fontSize: 20,
+        fontSize: 22.0,
         color: MyColors.white,
       ),
     ),

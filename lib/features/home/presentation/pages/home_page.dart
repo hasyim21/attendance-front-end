@@ -8,7 +8,7 @@ import '../../../attendance/presentation/bloc/check_attendance/check_attendance_
 import '../../../attendance/presentation/bloc/get_company/get_company_bloc.dart';
 import '../../../attendance/presentation/pages/check_in_page.dart';
 import '../../../attendance/presentation/pages/check_out_page.dart';
-import '../../../auth/presentation/bloc/logout/logout_bloc.dart';
+import '../../../note/presentation/bloc/get_notes/get_notes_bloc.dart';
 import '../widgets/attendance_button.dart';
 import '../widgets/note_list.dart';
 import '../widgets/user_profile.dart';
@@ -29,101 +29,100 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     context.read<CheckAttendanceBloc>().add(const CheckAttendanceEvent());
     context.read<GetCompanyBloc>().add(const GetCompanyEvent());
+    context.read<GetNotesBloc>().add(const GetNotesEvent());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(toolbarHeight: 0.0),
-      body: ListView(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10.0),
-            color: MyColors.primary,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Row(
-                  children: [
-                    Expanded(
-                      child: UserProfile(),
-                    ),
-                    MyIconButton(),
-                  ],
-                ),
-                const SpaceHeight(),
-                Text(
-                  DateTime.now().toFormattedDate(),
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                    color: MyColors.white,
-                  ),
-                ),
-                const SpaceHeight(),
-                MultiBlocListener(
-                  listeners: [
-                    BlocListener<CheckAttendanceBloc, CheckAttendanceState>(
-                      listener: (context, state) {
-                        if (state is CheckAttendanceSuccess) {
-                          setState(() {
-                            attendanceStatus = state.result;
-                          });
-                          print(attendanceStatus);
-                        }
-                      },
-                    ),
-                    BlocListener<GetCompanyBloc, GetCompanyState>(
-                      listener: (context, state) {
-                        if (state is GetCompanySuccess) {
-                          setState(() {
-                            company = state.result;
-                          });
-                        }
-                      },
-                    ),
-                  ],
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          context.read<CheckAttendanceBloc>().add(const CheckAttendanceEvent());
+          context.read<GetNotesBloc>().add(const GetNotesEvent());
+        },
+        child: ListView(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10.0),
+              color: MyColors.primary,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Row(
                     children: [
-                      AttendanceButton(
-                        label: 'Check In',
-                        iconPath: Icons.arrow_circle_down,
-                        time: '09:00 AM',
-                        onPressed: () async {
-                          await _detectFakeLocation();
-                          await _checkUserDistanceFromCompany();
-                          _checkInStatus();
+                      Expanded(
+                        child: UserProfile(),
+                      ),
+                      MyIconButton(),
+                    ],
+                  ),
+                  const SpaceHeight(),
+                  Text(
+                    DateTime.now().toFormattedDate(),
+                    style: const TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                      color: MyColors.white,
+                    ),
+                  ),
+                  const SpaceHeight(),
+                  MultiBlocListener(
+                    listeners: [
+                      BlocListener<CheckAttendanceBloc, CheckAttendanceState>(
+                        listener: (context, state) {
+                          if (state is CheckAttendanceSuccess) {
+                            setState(() {
+                              attendanceStatus = state.result;
+                            });
+                          }
                         },
                       ),
-                      const SpaceWidth(10.0),
-                      AttendanceButton(
-                        label: 'Check Out',
-                        iconPath: Icons.arrow_circle_up,
-                        time: '05:00 PM',
-                        onPressed: () async {
-                          await _detectFakeLocation();
-                          await _checkUserDistanceFromCompany();
-                          _checkOutStatus();
+                      BlocListener<GetCompanyBloc, GetCompanyState>(
+                        listener: (context, state) {
+                          if (state is GetCompanySuccess) {
+                            setState(() {
+                              company = state.result;
+                            });
+                          }
                         },
                       ),
                     ],
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        AttendanceButton(
+                          label: 'Check In',
+                          iconPath: Icons.arrow_circle_down,
+                          time: '09:00 AM',
+                          onPressed: () async {
+                            await _detectFakeLocation();
+                            await _checkUserDistanceFromCompany();
+                            _checkInStatus();
+                          },
+                        ),
+                        const SpaceWidth(10.0),
+                        AttendanceButton(
+                          label: 'Check Out',
+                          iconPath: Icons.arrow_circle_up,
+                          time: '05:00 PM',
+                          onPressed: () async {
+                            await _detectFakeLocation();
+                            await _checkUserDistanceFromCompany();
+                            _checkOutStatus();
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          const SpaceHeight(16.0),
-          const NoteList(),
-          const SpaceHeight(16.0),
-          Center(
-              child: Button.filled(
-                  onPressed: () {
-                    print('logout');
-                    context.read<LogoutBloc>().add(const LogoutEvent());
-                  },
-                  label: 'Logout')),
-        ],
+            const SpaceHeight(16.0),
+            const NoteList(),
+            const SpaceHeight(16.0),
+          ],
+        ),
       ),
     );
   }

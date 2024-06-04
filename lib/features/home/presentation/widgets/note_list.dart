@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
-import 'note_item.dart';
+import '../../../note/presentation/bloc/get_notes/get_notes_bloc.dart';
+import '../../../note/presentation/pages/add_note_page.dart';
+import '../../../note/presentation/widgets/note_item.dart';
 
 class NoteList extends StatelessWidget {
   const NoteList({
@@ -12,37 +15,66 @@ class NoteList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.0),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              const Text(
                 "Catatan",
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Icon(
-                Icons.add,
+              InkWell(
+                onTap: () => context.push(const AddNotePage()),
+                child: const Icon(
+                  Icons.add,
+                ),
               ),
             ],
           ),
         ),
         const SpaceHeight(16.0),
-        ListView.separated(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          itemCount: 10,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            return const NoteItem(
-              title: 'Meeting penting',
-              note: 'Jam 10:00 AM',
+        BlocBuilder<GetNotesBloc, GetNotesState>(
+          builder: (context, state) {
+            if (state is GetNotesError) {
+              return Center(
+                child: Text(state.failure.message),
+              );
+            }
+            if (state is GetNotesLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (state is GetNotesSuccess) {
+              if (state.result.isEmpty) {
+                return const Center(
+                  child: Text('Tidak ada catatan'),
+                );
+              }
+              return ListView.separated(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                itemCount: state.result.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  final note = state.result[index];
+                  return NoteItem(
+                    title: note.title,
+                    note: note.note,
+                  );
+                },
+                separatorBuilder: (context, index) => const SpaceHeight(),
+              );
+            }
+
+            return const Center(
+              child: Text('Tidak ada catatan'),
             );
           },
-          separatorBuilder: (context, index) => const SpaceHeight(),
         ),
       ],
     );
