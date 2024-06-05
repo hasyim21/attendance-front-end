@@ -35,6 +35,10 @@ import '../../features/permission/data/datasources/permission_remote_datasource.
 import '../../features/permission/data/repositories/permission_repository_impl.dart';
 import '../../features/permission/domain/usecases/add_permission.dart';
 import '../../features/permission/presentation/bloc/permission_bloc.dart';
+import '../../features/profile/data/datasources/profile_local_datasource.dart';
+import '../../features/profile/data/repositories/profile_repository_impl.dart';
+import '../../features/profile/domain/usecases/get_user_profile.dart';
+import '../../features/profile/presentation/bloc/bloc/get_user_profile_bloc.dart';
 
 class Providers extends StatelessWidget {
   final http.Client client;
@@ -81,6 +85,13 @@ class Providers extends StatelessWidget {
           create: (context) => NoteRepositoryImpl(
             noteRemoteDatasource: NoteRemoteDatasourceImpl(
               client: client,
+              authLocalDatasource: authLocalDatasource,
+            ),
+          ),
+        ),
+        RepositoryProvider(
+          create: (context) => ProfileRepositoryImpl(
+            profileLocalDatasource: ProfileLocalDatasourceImpl(
               authLocalDatasource: authLocalDatasource,
             ),
           ),
@@ -172,6 +183,13 @@ class Providers extends StatelessWidget {
             create: (context) => AddNoteBloc(
               AddNote(
                 noteRepository: context.read<NoteRepositoryImpl>(),
+              ),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => GetUserProfileBloc(
+              GetUserProfile(
+                profileRepository: context.read<ProfileRepositoryImpl>(),
               ),
             ),
           ),

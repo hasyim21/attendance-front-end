@@ -62,6 +62,19 @@ class UserModel extends User {
     );
   }
 
+  factory UserModel.initial() {
+    return const UserModel(
+      id: 0,
+      name: '-',
+      email: '-',
+      phone: '-',
+      role: '-',
+      position: '-',
+      department: '-',
+      faceEmbedding: '-',
+    );
+  }
+
   @override
   List<Object> get props {
     return [

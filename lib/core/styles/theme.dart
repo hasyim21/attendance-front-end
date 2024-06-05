@@ -8,6 +8,7 @@ class MyTheme {
     appBarTheme: const AppBarTheme(
       backgroundColor: MyColors.primary,
       surfaceTintColor: Colors.transparent,
+      iconTheme: IconThemeData(color: MyColors.white),
       titleTextStyle: TextStyle(
         fontSize: 22.0,
         color: MyColors.white,

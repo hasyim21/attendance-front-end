@@ -6,7 +6,7 @@ import '../../domain/repositories/note_repository.dart';
 import '../datasources/note_remote_datasource.dart';
 
 class NoteRepositoryImpl extends NoteRepository {
-  final NoteRemoteDatasourceImpl noteRemoteDatasource;
+  final NoteRemoteDatasource noteRemoteDatasource;
 
   NoteRepositoryImpl({required this.noteRemoteDatasource});
 

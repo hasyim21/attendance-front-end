@@ -44,20 +44,13 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           children: [
             Container(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(8.0),
               color: MyColors.primary,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Row(
-                    children: [
-                      Expanded(
-                        child: UserProfile(),
-                      ),
-                      MyIconButton(),
-                    ],
-                  ),
-                  const SpaceHeight(),
+                  const UserProfile(),
+                  const SpaceHeight(16.0),
                   Text(
                     DateTime.now().toFormattedDate(),
                     style: const TextStyle(
@@ -101,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                             _checkInStatus();
                           },
                         ),
-                        const SpaceWidth(10.0),
+                        const SpaceWidth(),
                         AttendanceButton(
                           label: 'Check Out',
                           iconPath: Icons.arrow_circle_up,

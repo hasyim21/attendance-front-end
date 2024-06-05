@@ -14,7 +14,7 @@ class UserProfile extends StatelessWidget {
         CircleAvatar(
           backgroundColor: MyColors.white,
         ),
-        SpaceWidth(8.0),
+        SpaceWidth(),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

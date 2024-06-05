@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../attendance/presentation/pages/attendance_history_page.dart';
 import '../../../permission/presentation/pages/permission_page.dart';
+import '../../../profile/presentation/pages/profile_page.dart';
 import 'home_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -24,7 +25,7 @@ class _MainPageState extends State<MainPage> {
     const HomePage(),
     const AttendanceHistoryPage(),
     const PermissionPage(),
-    const Center(child: Text('Halaman Profil')),
+    const ProfilePage(),
   ];
 
   @override
