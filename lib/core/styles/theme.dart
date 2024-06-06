@@ -10,8 +10,9 @@ class MyTheme {
       surfaceTintColor: Colors.transparent,
       iconTheme: IconThemeData(color: MyColors.white),
       titleTextStyle: TextStyle(
-        fontSize: 22.0,
+        fontSize: 20.0,
         color: MyColors.white,
+        fontWeight: FontWeight.bold,
       ),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(

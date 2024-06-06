@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/core.dart';
 import '../../../home/presentation/pages/main_page.dart';
-import '../bloc/permission_bloc.dart';
+import '../bloc/add_permission/add_permission_bloc.dart';
 import '../widgets/custom_date_picker.dart';
 
 class AddPermissionPage extends StatefulWidget {
@@ -62,7 +62,7 @@ class _AddPermissionPageState extends State<AddPermissionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Izin'),
+        title: const Text('Buat Izin'),
       ),
       body: ListView(
         padding: const EdgeInsets.all(18.0),
@@ -116,16 +116,16 @@ class _AddPermissionPageState extends State<AddPermissionPage> {
             ),
           ),
           const SpaceHeight(65.0),
-          BlocConsumer<PermissionBloc, PermissionState>(
+          BlocConsumer<AddPermissionBloc, AddPermissionState>(
             listener: (context, state) {
-              if (state is PermissionError) {
+              if (state is AddPermissionError) {
                 MySnackbar.show(
                   context,
                   message: state.failure.message,
                   backgroundColor: MyColors.red,
                 );
               }
-              if (state is PermissionSuccess) {
+              if (state is AddPermissionSuccess) {
                 dateController.clear();
                 reasonController.clear();
                 setState(() {
@@ -140,7 +140,7 @@ class _AddPermissionPageState extends State<AddPermissionPage> {
               }
             },
             builder: (context, state) {
-              if (state is PermissionLoading) {
+              if (state is AddPermissionLoading) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
@@ -149,7 +149,7 @@ class _AddPermissionPageState extends State<AddPermissionPage> {
               return Button.filled(
                 onPressed: () {
                   final image = imagePath != null ? XFile(imagePath!) : null;
-                  context.read<PermissionBloc>().add(
+                  context.read<AddPermissionBloc>().add(
                         AddPermissionEvent(
                             date: dateController.text,
                             reason: reasonController.text,

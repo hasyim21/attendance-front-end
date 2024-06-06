@@ -34,7 +34,9 @@ import '../../features/note/presentation/bloc/get_notes/get_notes_bloc.dart';
 import '../../features/permission/data/datasources/permission_remote_datasource.dart';
 import '../../features/permission/data/repositories/permission_repository_impl.dart';
 import '../../features/permission/domain/usecases/add_permission.dart';
-import '../../features/permission/presentation/bloc/permission_bloc.dart';
+import '../../features/permission/domain/usecases/get_permissions.dart';
+import '../../features/permission/presentation/bloc/add_permission/add_permission_bloc.dart';
+import '../../features/permission/presentation/bloc/get_permissions/get_permissions_bloc.dart';
 import '../../features/profile/data/datasources/profile_local_datasource.dart';
 import '../../features/profile/data/repositories/profile_repository_impl.dart';
 import '../../features/profile/domain/usecases/get_user_profile.dart';
@@ -166,9 +168,16 @@ class Providers extends StatelessWidget {
             ),
           ),
           BlocProvider(
-            create: (context) => PermissionBloc(
-              addPermission: AddPermission(
+            create: (context) => AddPermissionBloc(
+              AddPermission(
                 permissionRepository: context.read<PermissionRepositoryImpl>(),
+              ),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => GetPermissionsBloc(
+              GetPermissions(
+                context.read<PermissionRepositoryImpl>(),
               ),
             ),
           ),

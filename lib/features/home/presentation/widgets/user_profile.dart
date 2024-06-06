@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
+import '../../../auth/domain/entities/user.dart';
+import '../../../profile/presentation/bloc/bloc/get_user_profile_bloc.dart';
 
 class UserProfile extends StatelessWidget {
   const UserProfile({
@@ -9,34 +12,42 @@ class UserProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
-      children: [
-        CircleAvatar(
-          backgroundColor: MyColors.white,
-        ),
-        SpaceWidth(),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return BlocBuilder<GetUserProfileBloc, GetUserProfileState>(
+      builder: (context, state) {
+        User? user;
+        if (state is GetUserProfileSuccess) {
+          user = state.result;
+        }
+        return Row(
           children: [
-            Text(
-              'Lebron James',
-              style: TextStyle(
-                fontSize: 18.0,
-                color: MyColors.white,
-                fontWeight: FontWeight.bold,
-              ),
-              maxLines: 2,
+            const CircleAvatar(
+              backgroundColor: MyColors.white,
             ),
-            Text(
-              'Flutter Developer',
-              style: TextStyle(
-                fontSize: 12.0,
-                color: MyColors.white,
-              ),
+            const SpaceWidth(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  user?.name ?? '-',
+                  style: const TextStyle(
+                    fontSize: 18.0,
+                    color: MyColors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 2,
+                ),
+                Text(
+                  user?.position ?? '-',
+                  style: const TextStyle(
+                    fontSize: 12.0,
+                    color: MyColors.white,
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }

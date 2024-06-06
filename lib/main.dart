@@ -20,7 +20,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // await NotificationService().initialize();
+  await NotificationService().initialize();
   runApp(
     MyApp(authLocalDatasource: authLocalDatasource),
   );

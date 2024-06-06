@@ -6,132 +6,105 @@ import '../../../auth/domain/entities/user.dart';
 import '../../../auth/presentation/bloc/logout/logout_bloc.dart';
 import '../../../auth/presentation/pages/login_page.dart';
 import '../bloc/bloc/get_user_profile_bloc.dart';
-import '../widgets/contact_info.dart';
+import '../widgets/profile_menu.dart';
 
-class ProfilePage extends StatefulWidget {
+class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
-
-  @override
-  State<ProfilePage> createState() => _ProfilePageState();
-}
-
-class _ProfilePageState extends State<ProfilePage> {
-  User? user;
-
-  @override
-  void initState() {
-    super.initState();
-    context.read<GetUserProfileBloc>().add(const GetUserProfileEvent());
-  }
-
-  double coverHeight = 100.0;
-  double profilHeight = 120.0;
-  double get top => coverHeight - profilHeight / 2;
-  double get bottom => profilHeight / 2;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
-        actions: [
-          BlocListener<LogoutBloc, LogoutState>(
-            listener: (context, state) {
-              if (state is LogoutLoading) {
-                showDialogLoading(context);
-              }
-              if (state is LogoutSuccess) {
-                context.pushAndRemoveUntil(const LoginPage(), (route) => true);
-              }
-            },
-            child: PopupMenuButton(
-              itemBuilder: (BuildContext context) {
-                return <PopupMenuEntry>[
-                  PopupMenuItem(
-                    child: GestureDetector(
-                      onTap: () =>
-                          context.read<LogoutBloc>().add(const LogoutEvent()),
-                      child: const Row(
-                        children: [
-                          Icon(
-                            Icons.logout_outlined,
-                          ),
-                          SpaceWidth(),
-                          Text('Logout'),
-                        ],
-                      ),
-                    ),
-                  ),
-                ];
-              },
-            ),
-          )
-        ],
+        title: const Text('Profil'),
       ),
       body: BlocBuilder<GetUserProfileBloc, GetUserProfileState>(
         builder: (context, state) {
+          User? user;
           if (state is GetUserProfileSuccess) {
             user = state.result;
           }
           return ListView(
+            padding: const EdgeInsets.all(8.0),
             children: [
-              Stack(
-                clipBehavior: Clip.none,
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    color: MyColors.primary,
-                    height: coverHeight,
-                    margin: EdgeInsets.only(bottom: bottom),
-                  ),
-                  Positioned(
-                    top: top,
-                    child: CircleAvatar(
-                      radius: profilHeight / 2,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Column(
-                  children: [
-                    Text(
-                      user?.name ?? '-',
-                      style: const TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(user?.position ?? '-'),
-                    Text(user?.department ?? '-'),
-                    const SizedBox(
-                      height: 10.0,
-                    ),
-                    ContactInfo(
-                      title: "Phone Number",
-                      value: user?.phone ?? '-',
-                      icon: Icons.call,
-                    ),
-                    ContactInfo(
-                      title: "Email",
-                      value: user?.email ?? '-',
-                      icon: Icons.email,
-                    ),
-                    const ContactInfo(
-                      title: "Address",
-                      value: 'address',
-                      icon: Icons.location_on,
-                    ),
-                  ],
+              const SpaceHeight(8.0),
+              const Center(
+                child: CircleAvatar(
+                  radius: 60.0,
                 ),
               ),
-              const SizedBox(
-                height: 50.0,
+              const SpaceHeight(8.0),
+              Center(
+                child: Text(
+                  user?.name ?? '-',
+                  style: const TextStyle(
+                    fontSize: 18.0,
+                    color: MyColors.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
+              Center(
+                child: Text(
+                  user?.position ?? '-',
+                  style: const TextStyle(
+                    fontSize: 12.0,
+                    color: MyColors.grey,
+                  ),
+                ),
+              ),
+              const SpaceHeight(32.0),
+              const Text(
+                'Profil Saya',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SpaceHeight(16.0),
+              const MyDivider(),
+              ProfileMenu(
+                icon: Icons.work_outline,
+                title: user?.position ?? '-',
+              ),
+              const MyDivider(),
+              ProfileMenu(
+                icon: Icons.email_outlined,
+                title: user?.email ?? '-',
+              ),
+              const MyDivider(),
+              ProfileMenu(
+                icon: Icons.call_outlined,
+                title: user?.phone ?? '-',
+              ),
+              const MyDivider(),
+              const SpaceHeight(16.0),
+              const Text(
+                'Pengaturan',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SpaceHeight(16.0),
+              const MyDivider(),
+              BlocListener<LogoutBloc, LogoutState>(
+                listener: (context, state) {
+                  if (state is LogoutLoading) {
+                    showDialogLoading(context);
+                  }
+                  if (state is LogoutSuccess) {
+                    context.pushAndRemoveUntil(
+                        const LoginPage(), (route) => true);
+                  }
+                },
+                child: ProfileMenu(
+                  icon: Icons.logout_outlined,
+                  title: 'Logout',
+                  onTap: () =>
+                      context.read<LogoutBloc>().add(const LogoutEvent()),
+                ),
+              ),
+              const MyDivider(),
             ],
           );
         },

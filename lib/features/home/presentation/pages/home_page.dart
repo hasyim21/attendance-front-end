@@ -9,6 +9,7 @@ import '../../../attendance/presentation/bloc/get_company/get_company_bloc.dart'
 import '../../../attendance/presentation/pages/check_in_page.dart';
 import '../../../attendance/presentation/pages/check_out_page.dart';
 import '../../../note/presentation/bloc/get_notes/get_notes_bloc.dart';
+import '../../../profile/presentation/bloc/bloc/get_user_profile_bloc.dart';
 import '../widgets/attendance_button.dart';
 import '../widgets/note_list.dart';
 import '../widgets/user_profile.dart';
@@ -27,6 +28,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    context.read<GetUserProfileBloc>().add(const GetUserProfileEvent());
     context.read<CheckAttendanceBloc>().add(const CheckAttendanceEvent());
     context.read<GetCompanyBloc>().add(const GetCompanyEvent());
     context.read<GetNotesBloc>().add(const GetNotesEvent());
@@ -199,19 +201,5 @@ class _HomePageState extends State<HomePage> {
     }
 
     context.push(const CheckOutPage());
-  }
-}
-
-class MyIconButton extends StatelessWidget {
-  const MyIconButton({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return const Icon(
-      Icons.notifications,
-      color: MyColors.white,
-    );
   }
 }
