@@ -39,8 +39,6 @@ class _MainPageState extends State<MainPage> {
         currentIndex: _selectedIndex,
         onTap: _onTap,
         useLegacyColorScheme: false,
-        selectedFontSize: 12.0,
-        unselectedFontSize: 12.0,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),

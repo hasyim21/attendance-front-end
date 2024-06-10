@@ -34,44 +34,53 @@ class _PermissionPageState extends State<PermissionPage> {
       appBar: AppBar(
         title: const Text('Izin'),
         actions: [
-          IconButton(
-            onPressed: () {
-              context.push(const AddPermissionPage());
-            },
-            icon: const Icon(
-              Icons.add,
-              color: MyColors.white,
-            ),
+          MyIconButton(
+            onTap: () => context.push(const AddPermissionPage()),
+            icon: Icons.add,
           ),
+          const SpaceWidth(),
+          // IconButton(
+          //   onPressed: () {
+          //     context.push(const AddPermissionPage());
+          //   },
+          //   icon: const Icon(
+          //     Icons.add,
+          //     color: MyColors.white,
+          //   ),
+          // ),
         ],
       ),
-      body: BlocBuilder<GetPermissionsBloc, GetPermissionsState>(
-        builder: (context, state) {
-          if (state is GetPermissionsLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (state is GetPermissionsSuccess) {
-            if (state.result.isEmpty) {
+      body: RefreshIndicator(
+        onRefresh: () async =>
+            context.read<GetPermissionsBloc>().add(const GetPermissionsEvent()),
+        child: BlocBuilder<GetPermissionsBloc, GetPermissionsState>(
+          builder: (context, state) {
+            if (state is GetPermissionsLoading) {
               return const Center(
-                child: Text('Tidak ada izin'),
+                child: CircularProgressIndicator(),
               );
             }
-            return ListView.separated(
-              padding: const EdgeInsets.all(8.0),
-              itemCount: state.result.length,
-              itemBuilder: (context, index) {
-                final permission = state.result[index];
-                return PermissionItem(permission: permission);
-              },
-              separatorBuilder: (context, index) => const SpaceHeight(),
+            if (state is GetPermissionsSuccess) {
+              if (state.result.isEmpty) {
+                return const Center(
+                  child: Text('Tidak ada izin'),
+                );
+              }
+              return ListView.separated(
+                padding: const EdgeInsets.all(8.0),
+                itemCount: state.result.length,
+                itemBuilder: (context, index) {
+                  final permission = state.result[index];
+                  return PermissionItem(permission: permission);
+                },
+                separatorBuilder: (context, index) => const SpaceHeight(),
+              );
+            }
+            return const Center(
+              child: Text('Tidak ada izin'),
             );
-          }
-          return const Center(
-            child: Text('Tidak ada izin'),
-          );
-        },
+          },
+        ),
       ),
     );
   }

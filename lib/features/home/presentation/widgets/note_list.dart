@@ -27,11 +27,9 @@ class NoteList extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              InkWell(
+              MyIconButton(
                 onTap: () => context.push(const AddNotePage()),
-                child: const Icon(
-                  Icons.add,
-                ),
+                icon: Icons.add,
               ),
             ],
           ),

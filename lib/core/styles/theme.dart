@@ -18,12 +18,16 @@ class MyTheme {
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       type: BottomNavigationBarType.fixed,
       backgroundColor: MyColors.white,
-      selectedLabelStyle: TextStyle(color: MyColors.primary),
-      unselectedLabelStyle: TextStyle(color: MyColors.grey),
-      selectedIconTheme: IconThemeData(color: MyColors.primary),
-      unselectedIconTheme: IconThemeData(
-        color: MyColors.grey,
+      selectedLabelStyle: TextStyle(
+        color: MyColors.primary,
+        fontSize: 12.0,
       ),
+      unselectedLabelStyle: TextStyle(
+        color: MyColors.grey,
+        fontSize: 12.0,
+      ),
+      selectedIconTheme: IconThemeData(color: MyColors.primary),
+      unselectedIconTheme: IconThemeData(color: MyColors.grey),
     ),
   );
 }

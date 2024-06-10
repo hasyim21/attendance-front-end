@@ -35,12 +35,9 @@ class NoteItem extends StatelessWidget {
         height: 60.0,
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(8.0),
-        decoration: BoxDecoration(
-          border: Border.all(
-            width: 1.0,
-            color: Colors.grey.shade200,
-          ),
-          borderRadius: const BorderRadius.all(
+        decoration: const BoxDecoration(
+          color: MyColors.white,
+          borderRadius: BorderRadius.all(
             Radius.circular(8.0),
           ),
         ),
@@ -48,11 +45,16 @@ class NoteItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title),
+            Text(
+              title,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             Text(
               note,
-              style: TextStyle(
-                color: Colors.grey.shade500,
+              style: const TextStyle(
+                color: MyColors.grey,
               ),
             ),
           ],

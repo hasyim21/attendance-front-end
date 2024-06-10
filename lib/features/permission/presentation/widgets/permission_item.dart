@@ -13,13 +13,9 @@ class PermissionItem extends StatelessWidget {
     return Container(
       height: 60.0,
       width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: MyColors.white,
-        border: Border.all(
-          width: 1.0,
-          color: Colors.grey.shade200,
-        ),
-        borderRadius: const BorderRadius.all(
+        borderRadius: BorderRadius.all(
           Radius.circular(8.0),
         ),
       ),
@@ -57,6 +53,8 @@ class PermissionItem extends StatelessWidget {
                     ],
                   ),
                   Container(
+                    height: 25.0,
+                    width: 60.0,
                     padding: const EdgeInsets.all(4.0),
                     decoration: BoxDecoration(
                       color: _getStatusColor(permission.isApproved),
@@ -64,11 +62,13 @@ class PermissionItem extends StatelessWidget {
                         Radius.circular(4.0),
                       ),
                     ),
-                    child: Text(
-                      _getApprovalStatus(permission.isApproved),
-                      style: const TextStyle(
-                        fontSize: 12.0,
-                        color: MyColors.white,
+                    child: Center(
+                      child: Text(
+                        _getApprovalStatus(permission.isApproved),
+                        style: const TextStyle(
+                          fontSize: 12.0,
+                          color: MyColors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -87,9 +87,9 @@ class PermissionItem extends StatelessWidget {
     } else if (isApproved == 1) {
       return MyColors.green;
     } else if (isApproved == 2) {
-      return Colors.yellow;
+      return MyColors.yellow;
     } else {
-      return Colors.white;
+      return MyColors.white;
     }
   }
 
