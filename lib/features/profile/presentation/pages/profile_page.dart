@@ -24,43 +24,59 @@ class ProfilePage extends StatelessWidget {
             user = state.result;
           }
           return ListView(
-            padding: const EdgeInsets.all(8.0),
             children: [
-              const SpaceHeight(8.0),
-              const Center(
-                child: CircleAvatar(
-                  radius: 60.0,
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16.0,
+                  horizontal: 8.0,
+                ),
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    const Center(
+                      child: CircleAvatar(
+                        radius: 60.0,
+                      ),
+                    ),
+                    const SpaceHeight(8.0),
+                    Center(
+                      child: Text(
+                        user?.name ?? '-',
+                        style: const TextStyle(
+                          fontSize: 18.0,
+                          color: MyColors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        user?.position ?? '-',
+                        style: const TextStyle(
+                          fontSize: 12.0,
+                          color: MyColors.grey,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SpaceHeight(8.0),
-              Center(
+              const SpaceHeight(),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text(
-                  user?.name ?? '-',
-                  style: const TextStyle(
-                    fontSize: 18.0,
-                    color: MyColors.primary,
+                  'Profil Saya',
+                  style: TextStyle(
+                    fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              Center(
-                child: Text(
-                  user?.position ?? '-',
-                  style: const TextStyle(
-                    fontSize: 12.0,
-                    color: MyColors.grey,
-                  ),
-                ),
+              const SpaceHeight(),
+              ProfileMenu(
+                icon: Icons.apartment_rounded,
+                title: user?.department ?? '-',
               ),
-              const SpaceHeight(32.0),
-              const Text(
-                'Profil Saya',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SpaceHeight(16.0),
               const MyDivider(),
               ProfileMenu(
                 icon: Icons.work_outline,
@@ -76,17 +92,18 @@ class ProfilePage extends StatelessWidget {
                 icon: Icons.call_outlined,
                 title: user?.phone ?? '-',
               ),
-              const MyDivider(),
-              const SpaceHeight(16.0),
-              const Text(
-                'Pengaturan',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+              const SpaceHeight(),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Pengaturan',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-              const SpaceHeight(16.0),
-              const MyDivider(),
+              const SpaceHeight(),
               BlocListener<LogoutBloc, LogoutState>(
                 listener: (context, state) {
                   if (state is LogoutLoading) {
@@ -104,7 +121,6 @@ class ProfilePage extends StatelessWidget {
                       context.read<LogoutBloc>().add(const LogoutEvent()),
                 ),
               ),
-              const MyDivider(),
             ],
           );
         },

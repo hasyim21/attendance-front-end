@@ -10,6 +10,7 @@ class MyDivider extends StatelessWidget {
     return Divider(
       color: Colors.grey.shade200,
       height: 0.0,
+      thickness: 0.5,
     );
   }
 }

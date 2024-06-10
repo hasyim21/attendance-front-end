@@ -4,7 +4,7 @@ import '../core.dart';
 
 class MyTheme {
   static ThemeData light = ThemeData.light(useMaterial3: true).copyWith(
-    scaffoldBackgroundColor: MyColors.white,
+    scaffoldBackgroundColor: MyColors.background,
     appBarTheme: const AppBarTheme(
       backgroundColor: MyColors.primary,
       surfaceTintColor: Colors.transparent,
