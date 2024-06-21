@@ -4,8 +4,8 @@ class MyColors {
   /// background = #FAFAFA
   static const Color background = Color(0xFFFAFAFA);
 
-  /// primary = #567DF4
-  static const Color primary = Color(0xFF567DF4);
+  /// primary = #1E64D7
+  static const Color primary = Color(0xFF1E64D7);
 
   /// secondary = #99ACE9
   static const Color secondary = Color(0xFF99ACE9);

@@ -1,44 +1,13 @@
 import 'package:flutter/material.dart';
-import '../styles/colors.dart';
 
-enum ButtonStyleType { filled, outlined }
+import '../core.dart';
 
-class Button extends StatelessWidget {
-  const Button.filled({
-    super.key,
-    required this.onPressed,
-    required this.label,
-    this.style = ButtonStyleType.filled,
-    this.color = MyColors.primary,
-    this.textColor = Colors.white,
-    this.width = double.infinity,
-    this.height = 60.0,
-    this.borderRadius = 18.0,
-    this.icon,
-    this.suffixIcon,
-    this.disabled = false,
-    this.fontSize = 18.0,
-  });
+enum MyButtonStyleType { filled, outlined }
 
-  const Button.outlined({
-    super.key,
-    required this.onPressed,
-    required this.label,
-    this.style = ButtonStyleType.outlined,
-    this.color = Colors.transparent,
-    this.textColor = MyColors.primary,
-    this.width = double.infinity,
-    this.height = 60.0,
-    this.borderRadius = 18.0,
-    this.icon,
-    this.suffixIcon,
-    this.disabled = false,
-    this.fontSize = 18.0,
-  });
-
+class MyButton extends StatelessWidget {
   final Function() onPressed;
   final String label;
-  final ButtonStyleType style;
+  final MyButtonStyleType style;
   final Color color;
   final Color textColor;
   final double? width;
@@ -49,12 +18,44 @@ class Button extends StatelessWidget {
   final bool disabled;
   final double fontSize;
 
+  const MyButton.filled({
+    super.key,
+    required this.onPressed,
+    required this.label,
+    this.style = MyButtonStyleType.filled,
+    this.color = MyColors.primary,
+    this.textColor = MyColors.white,
+    this.width = double.infinity,
+    this.height = 50.0,
+    this.borderRadius = 8.0,
+    this.icon,
+    this.suffixIcon,
+    this.disabled = false,
+    this.fontSize = 18.0,
+  });
+
+  const MyButton.outlined({
+    super.key,
+    required this.onPressed,
+    required this.label,
+    this.style = MyButtonStyleType.outlined,
+    this.color = Colors.transparent,
+    this.textColor = MyColors.primary,
+    this.width = double.infinity,
+    this.height = 50.0,
+    this.borderRadius = 8.0,
+    this.icon,
+    this.suffixIcon,
+    this.disabled = false,
+    this.fontSize = 18.0,
+  });
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: height,
       width: width,
-      child: style == ButtonStyleType.filled
+      child: style == MyButtonStyleType.filled
           ? ElevatedButton(
               onPressed: disabled ? null : onPressed,
               style: ElevatedButton.styleFrom(
@@ -67,8 +68,7 @@ class Button extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   icon ?? const SizedBox.shrink(),
-                  if (icon != null && label.isNotEmpty)
-                    const SizedBox(width: 10.0),
+                  if (icon != null && label.isNotEmpty) const SpaceWidth(),
                   Text(
                     label,
                     style: TextStyle(
@@ -78,7 +78,7 @@ class Button extends StatelessWidget {
                     ),
                   ),
                   if (suffixIcon != null && label.isNotEmpty)
-                    const SizedBox(width: 10.0),
+                    const SpaceWidth(),
                   suffixIcon ?? const SizedBox.shrink(),
                 ],
               ),
@@ -87,7 +87,7 @@ class Button extends StatelessWidget {
               onPressed: disabled ? null : onPressed,
               style: OutlinedButton.styleFrom(
                 backgroundColor: color,
-                side: const BorderSide(color: Colors.grey),
+                side: const BorderSide(color: MyColors.primary),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(borderRadius),
                 ),
@@ -96,8 +96,7 @@ class Button extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   icon ?? const SizedBox.shrink(),
-                  if (icon != null && label.isNotEmpty)
-                    const SizedBox(width: 10.0),
+                  if (icon != null && label.isNotEmpty) const SpaceWidth(),
                   Text(
                     label,
                     style: TextStyle(
@@ -107,7 +106,7 @@ class Button extends StatelessWidget {
                     ),
                   ),
                   if (suffixIcon != null && label.isNotEmpty)
-                    const SizedBox(width: 10.0),
+                    const SpaceWidth(),
                   suffixIcon ?? const SizedBox.shrink(),
                 ],
               ),
