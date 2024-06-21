@@ -48,12 +48,6 @@ class _CheckOutPageState extends State<CheckOutPage> {
     _getCurrentPosition();
   }
 
-  @override
-  void dispose() {
-    _controller!.dispose();
-    super.dispose();
-  }
-
   _initializeCamera() async {
     _availableCameras = await availableCameras();
     _controller = CameraController(description, ResolutionPreset.high);
@@ -216,6 +210,12 @@ class _CheckOutPageState extends State<CheckOutPage> {
     return CustomPaint(
       painter: painter,
     );
+  }
+
+  @override
+  void dispose() {
+    _controller!.dispose();
+    super.dispose();
   }
 
   @override

@@ -28,6 +28,18 @@ class _RegisterFacePageState extends State<RegisterFacePage> {
   bool _register = false;
   bool _isBusy = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _detector = FaceDetector(
+      options: FaceDetectorOptions(performanceMode: FaceDetectorMode.fast),
+    );
+    _recognizer = Recognizer();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeCamera();
+    });
+  }
+
   Future<void> _initializeCamera() async {
     try {
       _cameras = await availableCameras();
@@ -171,18 +183,6 @@ class _RegisterFacePageState extends State<RegisterFacePage> {
     return CustomPaint(
       painter: painter,
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _detector = FaceDetector(
-      options: FaceDetectorOptions(performanceMode: FaceDetectorMode.fast),
-    );
-    _recognizer = Recognizer();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _initializeCamera();
-    });
   }
 
   @override

@@ -40,7 +40,7 @@ class AttendanceSuccessPage extends StatelessWidget {
               ),
             ),
             const SpaceHeight(80.0),
-            Button.filled(
+            MyButton.filled(
               onPressed: () {
                 context
                     .read<CheckAttendanceBloc>()

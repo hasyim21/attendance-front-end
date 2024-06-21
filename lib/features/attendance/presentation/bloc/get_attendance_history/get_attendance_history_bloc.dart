@@ -17,18 +17,17 @@ class GetAttendanceHistoryBloc
     on<GetAttendanceHistoryEvent>((event, emit) async {
       emit(GetAttendanceHistoryLoading());
 
-      final result = await getAttendanceHistory.call(date: event.date);
+      final result = await getAttendanceHistory.call(
+          startDate: event.startDate, endDate: event.endDate);
 
       result.fold(
-          (l) => emit(
-                GetAttendanceHistoryError(
-                  failure: Failure(message: l.message),
-                ),
-              ), (r) {
-        emit(
-          GetAttendanceHistorySuccess(result: r),
-        );
-      });
+        (l) => emit(
+          GetAttendanceHistoryError(
+            failure: Failure(message: l.message),
+          ),
+        ),
+        (r) => emit(GetAttendanceHistorySuccess(result: r)),
+      );
     });
   }
 }

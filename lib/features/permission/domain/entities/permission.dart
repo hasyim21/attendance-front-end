@@ -3,7 +3,8 @@ import 'package:equatable/equatable.dart';
 class Permission extends Equatable {
   final int id;
   final int userId;
-  final String datePermission;
+  final String startDate;
+  final String endDate;
   final String reason;
   final String image;
   final int isApproved;
@@ -11,7 +12,8 @@ class Permission extends Equatable {
   const Permission({
     required this.id,
     required this.userId,
-    required this.datePermission,
+    required this.startDate,
+    required this.endDate,
     required this.reason,
     required this.image,
     required this.isApproved,
@@ -22,7 +24,8 @@ class Permission extends Equatable {
     return [
       id,
       userId,
-      datePermission,
+      startDate,
+      endDate,
       reason,
       image,
       isApproved,
@@ -31,6 +34,6 @@ class Permission extends Equatable {
 
   @override
   String toString() {
-    return 'Permission(id: $id, userId: $userId, datePermission: $datePermission, reason: $reason, image: $image, isApproved: $isApproved)';
+    return 'Permission(id: $id, userId: $userId, startDate: $startDate, endDate: $endDate, reason: $reason, image: $image, isApproved: $isApproved)';
   }
 }

@@ -28,9 +28,13 @@ import '../../features/auth/presentation/bloc/logout/logout_bloc.dart';
 import '../../features/note/data/datasources/note_remote_datasource.dart';
 import '../../features/note/data/repositories/note_repository_impl.dart';
 import '../../features/note/domain/usecases/add_note.dart';
+import '../../features/note/domain/usecases/delete_note.dart';
 import '../../features/note/domain/usecases/get_notes.dart';
+import '../../features/note/domain/usecases/update_note.dart';
 import '../../features/note/presentation/bloc/add_note/add_note_bloc.dart';
+import '../../features/note/presentation/bloc/delete_note/delete_note_bloc.dart';
 import '../../features/note/presentation/bloc/get_notes/get_notes_bloc.dart';
+import '../../features/note/presentation/bloc/update_note/update_note_bloc.dart';
 import '../../features/permission/data/datasources/permission_remote_datasource.dart';
 import '../../features/permission/data/repositories/permission_repository_impl.dart';
 import '../../features/permission/domain/usecases/add_permission.dart';
@@ -184,7 +188,7 @@ class Providers extends StatelessWidget {
           BlocProvider(
             create: (context) => GetNotesBloc(
               GetNotes(
-                noteRepository: context.read<NoteRepositoryImpl>(),
+                context.read<NoteRepositoryImpl>(),
               ),
             ),
           ),
@@ -192,6 +196,20 @@ class Providers extends StatelessWidget {
             create: (context) => AddNoteBloc(
               AddNote(
                 noteRepository: context.read<NoteRepositoryImpl>(),
+              ),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => UpdateNoteBloc(
+              UpdateNote(
+                context.read<NoteRepositoryImpl>(),
+              ),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => DeleteNoteBloc(
+              DeleteNote(
+                context.read<NoteRepositoryImpl>(),
               ),
             ),
           ),

@@ -13,12 +13,17 @@ class PermissionRepositoryImpl extends PermissionRepository {
   @override
   Future<Either<Failure, String>> addPermission(
     String image,
-    String date,
+    String startDate,
+    String endDate,
     String reason,
   ) async {
     try {
-      final result =
-          await permissionRemoteDatasource.addPermission(image, date, reason);
+      final result = await permissionRemoteDatasource.addPermission(
+        image,
+        startDate,
+        endDate,
+        reason,
+      );
       return Right(result);
     } catch (e) {
       return Left(Failure(message: e.toString()));
@@ -26,9 +31,11 @@ class PermissionRepositoryImpl extends PermissionRepository {
   }
 
   @override
-  Future<Either<Failure, List<Permission>>> getPermissions() async {
+  Future<Either<Failure, List<Permission>>> getPermissions(
+      int isApproved) async {
     try {
-      final result = await permissionRemoteDatasource.getPermissions();
+      final result =
+          await permissionRemoteDatasource.getPermissions(isApproved);
       return Right(result);
     } catch (e) {
       return Left(Failure(message: e.toString()));

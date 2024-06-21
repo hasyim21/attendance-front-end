@@ -9,7 +9,10 @@ class GetAttendanceHistory {
 
   GetAttendanceHistory({required this.attendanceRepository});
 
-  Future<Either<Failure, List<Attendance>>> call({required String date}) async {
-    return await attendanceRepository.getAttendanceHistory(date);
+  Future<Either<Failure, List<Attendance>>> call({
+    required String startDate,
+    required String endDate,
+  }) async {
+    return await attendanceRepository.getAttendanceHistory(startDate, endDate);
   }
 }

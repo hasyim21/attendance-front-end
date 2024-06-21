@@ -6,7 +6,8 @@ class PermissionModel extends Permission {
   const PermissionModel({
     required super.id,
     required super.userId,
-    required super.datePermission,
+    required super.startDate,
+    required super.endDate,
     required super.reason,
     required super.image,
     required super.isApproved,
@@ -19,7 +20,8 @@ class PermissionModel extends Permission {
   factory PermissionModel.fromMap(Map<String, dynamic> json) => PermissionModel(
         id: json["id"],
         userId: json["user_id"],
-        datePermission: json["date_permission"],
+        startDate: json["start_date"],
+        endDate: json["end_date"] ?? '',
         reason: json["reason"],
         image: json["image"],
         isApproved: json["is_approved"],
@@ -28,7 +30,8 @@ class PermissionModel extends Permission {
   Map<String, dynamic> toMap() => {
         "id": id,
         "user_id": userId,
-        "date_permission": datePermission,
+        "start_date": startDate,
+        "end_date": endDate,
         "reason": reason,
         "image": image,
         "is_approved": isApproved,

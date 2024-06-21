@@ -5,11 +5,11 @@ import '../entities/note.dart';
 import '../repositories/note_repository.dart';
 
 class GetNotes {
-  final NoteRepository noteRepository;
+  final NoteRepository _noteRepository;
 
-  GetNotes({required this.noteRepository});
+  GetNotes(this._noteRepository);
 
   Future<Either<Failure, List<Note>>> call() async {
-    return await noteRepository.getNotes();
+    return await _noteRepository.getNotes();
   }
 }

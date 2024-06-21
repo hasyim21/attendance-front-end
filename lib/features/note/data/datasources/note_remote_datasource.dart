@@ -9,6 +9,13 @@ import '../models/note_model.dart';
 abstract class NoteRemoteDatasource {
   Future<List<NoteModel>> getNotes();
   Future<String> addNote(String title, String note);
+  Future<String> updateNote(
+    int id,
+    String title,
+    String note,
+    bool isCompleted,
+  );
+  Future<String> deleteNote(int id);
 }
 
 class NoteRemoteDatasourceImpl extends NoteRemoteDatasource {
@@ -63,6 +70,60 @@ class NoteRemoteDatasourceImpl extends NoteRemoteDatasource {
 
     if (response.statusCode == 201) {
       return 'Note created successfully';
+    } else {
+      throw Failure(message: json.decode(response.body)['message']);
+    }
+  }
+
+  @override
+  Future<String> updateNote(
+    int id,
+    String title,
+    String note,
+    bool isCompleted,
+  ) async {
+    final token = await authLocalDatasource.getToken();
+    final url = Uri.parse('$mainUrl/api-notes/$id');
+    final headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+
+    final response = await client.patch(
+      url,
+      headers: headers,
+      body: json.encode({
+        'title': title,
+        'note': note,
+        'is_completed': isCompleted,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return 'Note updated successfully';
+    } else {
+      throw Failure(message: json.decode(response.body)['message']);
+    }
+  }
+
+  @override
+  Future<String> deleteNote(int id) async {
+    final token = await authLocalDatasource.getToken();
+    final url = Uri.parse('$mainUrl/api-notes/$id');
+    final headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+
+    final response = await client.delete(
+      url,
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      return 'Note deleted successfully';
     } else {
       throw Failure(message: json.decode(response.body)['message']);
     }

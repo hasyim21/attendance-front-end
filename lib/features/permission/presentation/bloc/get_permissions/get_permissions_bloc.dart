@@ -16,7 +16,7 @@ class GetPermissionsBloc
     on<GetPermissionsEvent>((event, emit) async {
       emit(GetPermissionsLoading());
 
-      final result = await _getPermissions.call();
+      final result = await _getPermissions.call(event.isApproved);
 
       result.fold(
         (l) => emit(

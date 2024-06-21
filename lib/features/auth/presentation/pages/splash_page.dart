@@ -26,6 +26,7 @@ class SplashPage extends StatelessWidget {
     );
     return Scaffold(
       backgroundColor: MyColors.primary,
+      appBar: AppBar(toolbarHeight: 0.0),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(50.0),

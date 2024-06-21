@@ -8,6 +8,8 @@ class AttendanceButton extends StatelessWidget {
   final String label;
   final IconData iconPath;
   final String time;
+  final Color buttonColor;
+  final Color borderButtonColor;
   final VoidCallback onPressed;
 
   const AttendanceButton({
@@ -15,6 +17,8 @@ class AttendanceButton extends StatelessWidget {
     required this.label,
     required this.iconPath,
     required this.time,
+    required this.buttonColor,
+    required this.borderButtonColor,
     required this.onPressed,
   });
 
@@ -22,15 +26,22 @@ class AttendanceButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Material(
-        color: MyColors.white,
+        color: buttonColor,
         borderRadius: BorderRadius.circular(8.0),
         child: InkWell(
           borderRadius: BorderRadius.circular(8.0),
           onTap: onPressed,
           child: Container(
             width: MediaQuery.of(context).size.width,
-            height: 65.0,
+            height: 68.0,
             padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.0),
+              border: Border.all(
+                width: 2.0,
+                color: borderButtonColor,
+              ),
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,6 +54,7 @@ class AttendanceButton extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold,
+                        color: MyColors.white,
                       ),
                     ),
                     // SvgPicture.asset(
@@ -51,11 +63,19 @@ class AttendanceButton extends StatelessWidget {
                     //   height: 24.0,
                     //   color: MyColors.white,
                     // ),
-                    Icon(iconPath),
+                    Icon(
+                      iconPath,
+                      color: MyColors.white,
+                    ),
                   ],
                 ),
                 const SpaceHeight(4.0),
-                Text(label),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    color: MyColors.white,
+                  ),
+                ),
               ],
             ),
           ),

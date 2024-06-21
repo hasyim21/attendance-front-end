@@ -9,7 +9,7 @@ class GetPermissions {
 
   GetPermissions(this._permissionRepository);
 
-  Future<Either<Failure, List<Permission>>> call() async {
-    return await _permissionRepository.getPermissions();
+  Future<Either<Failure, List<Permission>>> call(int isApproved) async {
+    return await _permissionRepository.getPermissions(isApproved);
   }
 }

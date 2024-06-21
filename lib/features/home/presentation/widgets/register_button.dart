@@ -10,7 +10,7 @@ class RegisterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Button.filled(
+    return MyButton.filled(
       onPressed: () {
         showBottomSheet(
           backgroundColor: MyColors.white,
@@ -24,7 +24,7 @@ class RegisterButton extends StatelessWidget {
                 const SizedBox(
                   width: 60.0,
                   height: 8.0,
-                  child: Divider(color: MyColors.lightSheet),
+                  child: Divider(color: MyColors.primary),
                 ),
                 const CloseButton(),
                 const Center(
@@ -47,13 +47,13 @@ class RegisterButton extends StatelessWidget {
                   ),
                 ),
                 const SpaceHeight(36.0),
-                Button.filled(
+                MyButton.filled(
                   onPressed: () => context.pop(),
                   label: 'Tolak',
                   color: MyColors.secondary,
                 ),
                 const SpaceHeight(16.0),
-                Button.filled(
+                MyButton.filled(
                   onPressed: () {
                     context.pop();
                     context.push(const RegisterFacePage());

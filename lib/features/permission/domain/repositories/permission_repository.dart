@@ -6,8 +6,9 @@ import '../entities/permission.dart';
 abstract class PermissionRepository {
   Future<Either<Failure, String>> addPermission(
     String image,
-    String date,
+    String startDate,
+    String endDate,
     String reason,
   );
-  Future<Either<Failure, List<Permission>>> getPermissions();
+  Future<Either<Failure, List<Permission>>> getPermissions(int isApproved);
 }

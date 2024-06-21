@@ -9,7 +9,6 @@ import 'package:intl/intl.dart';
 import '../../../../core/core.dart';
 import '../../../home/presentation/pages/main_page.dart';
 import '../bloc/add_permission/add_permission_bloc.dart';
-import '../widgets/custom_date_picker.dart';
 
 class AddPermissionPage extends StatefulWidget {
   const AddPermissionPage({super.key});
@@ -20,14 +19,16 @@ class AddPermissionPage extends StatefulWidget {
 
 class _AddPermissionPageState extends State<AddPermissionPage> {
   String? imagePath;
-  late final TextEditingController dateController;
-  late final TextEditingController reasonController;
+  late final TextEditingController _startDateController;
+  late final TextEditingController _endDateController;
+  late final TextEditingController _reasonController;
 
   @override
   void initState() {
     super.initState();
-    dateController = TextEditingController();
-    reasonController = TextEditingController();
+    _startDateController = TextEditingController();
+    _endDateController = TextEditingController();
+    _reasonController = TextEditingController();
   }
 
   Future<void> _pickImage() async {
@@ -53,8 +54,9 @@ class _AddPermissionPageState extends State<AddPermissionPage> {
 
   @override
   void dispose() {
-    dateController.dispose();
-    reasonController.dispose();
+    _startDateController.dispose();
+    _endDateController.dispose();
+    _reasonController.dispose();
     super.dispose();
   }
 
@@ -65,57 +67,70 @@ class _AddPermissionPageState extends State<AddPermissionPage> {
         title: const Text('Buat Izin'),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(18.0),
+        padding: const EdgeInsets.all(8.0),
         children: [
-          CustomDatePicker(
-            label: 'Tanggal',
-            onDateSelected: (selectedDate) =>
-                dateController.text = formatDate(selectedDate).toString(),
-          ),
-          const SpaceHeight(16.0),
-          CustomTextField(
-            controller: reasonController,
+          MyTextField(
+            controller: _reasonController,
             label: 'Keperluan',
             maxLines: 5,
           ),
-          const SpaceHeight(26.0),
-          Padding(
-            padding: EdgeInsets.only(right: context.deviceWidth / 2),
-            child: GestureDetector(
-              onTap: _pickImage,
-              child: imagePath == null
-                  ? DottedBorder(
-                      borderType: BorderType.RRect,
-                      color: Colors.grey,
-                      radius: const Radius.circular(18.0),
-                      dashPattern: const [8, 4],
-                      child: const Center(
-                        child: SizedBox(
-                          height: 120.0,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.image),
-                              SpaceHeight(18.0),
-                              Text('Lampiran'),
-                            ],
+          const SpaceHeight(16.0),
+          MyDatePicker(
+            label: 'Tanggal Mulai',
+            onDateSelected: (selectedDate) =>
+                _startDateController.text = formatDate(selectedDate).toString(),
+          ),
+          const SpaceHeight(16.0),
+          MyDatePicker(
+            label: 'Tanggal Selesai',
+            onDateSelected: (selectedDate) =>
+                _endDateController.text = formatDate(selectedDate).toString(),
+          ),
+          const SpaceHeight(16.0),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Lampiran',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SpaceHeight(),
+              GestureDetector(
+                onTap: _pickImage,
+                child: imagePath == null
+                    ? DottedBorder(
+                        borderType: BorderType.RRect,
+                        color: MyColors.grey,
+                        radius: const Radius.circular(8.0),
+                        dashPattern: const [8, 4],
+                        child: Container(
+                          color: MyColors.white,
+                          height: 150.0,
+                          width: 150.0,
+                          child: const Icon(
+                            Icons.image_outlined,
+                            size: 60.0,
                           ),
                         ),
+                      )
+                    : ClipRRect(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(8.0),
+                        ),
+                        child: Image.file(
+                          File(imagePath!),
+                          height: 150.0,
+                          width: 150.0,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    )
-                  : ClipRRect(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(18.0),
-                      ),
-                      child: Image.file(
-                        File(imagePath!),
-                        height: 120.0,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-            ),
+              ),
+            ],
           ),
-          const SpaceHeight(65.0),
+          const SpaceHeight(32.0),
           BlocConsumer<AddPermissionBloc, AddPermissionState>(
             listener: (context, state) {
               if (state is AddPermissionError) {
@@ -126,8 +141,8 @@ class _AddPermissionPageState extends State<AddPermissionPage> {
                 );
               }
               if (state is AddPermissionSuccess) {
-                dateController.clear();
-                reasonController.clear();
+                _startDateController.clear();
+                _reasonController.clear();
                 setState(() {
                   imagePath = null;
                 });
@@ -146,13 +161,14 @@ class _AddPermissionPageState extends State<AddPermissionPage> {
                 );
               }
 
-              return Button.filled(
+              return MyButton.filled(
                 onPressed: () {
                   final image = imagePath != null ? XFile(imagePath!) : null;
                   context.read<AddPermissionBloc>().add(
                         AddPermissionEvent(
-                            date: dateController.text,
-                            reason: reasonController.text,
+                            startDate: _startDateController.text,
+                            endDate: _endDateController.text,
+                            reason: _reasonController.text,
                             image: image!.path),
                       );
                 },

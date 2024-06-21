@@ -30,12 +30,13 @@ class ProfilePage extends StatelessWidget {
                   vertical: 16.0,
                   horizontal: 8.0,
                 ),
-                color: Colors.white,
+                color: MyColors.white,
                 child: Column(
                   children: [
                     const Center(
                       child: CircleAvatar(
                         radius: 60.0,
+                        backgroundColor: MyColors.primary,
                       ),
                     ),
                     const SpaceHeight(8.0),

@@ -12,9 +12,15 @@ class AddPermission {
 
   Future<Either<Failure, String>> call({
     required String image,
-    required String date,
+    required String startDate,
+    required String endDate,
     required String reason,
   }) async {
-    return await permissionRepository.addPermission(image, date, reason);
+    return await permissionRepository.addPermission(
+      image,
+      startDate,
+      endDate,
+      reason,
+    );
   }
 }

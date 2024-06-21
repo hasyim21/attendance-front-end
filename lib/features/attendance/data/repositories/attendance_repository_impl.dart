@@ -76,10 +76,14 @@ class AttendanceRepositoryImpl extends AttendanceRepository {
 
   @override
   Future<Either<Failure, List<Attendance>>> getAttendanceHistory(
-      String date) async {
+    String startDate,
+    String endDate,
+  ) async {
     try {
-      final result =
-          await attendanceRemoteDatasource.getAttendanceHistory(date);
+      final result = await attendanceRemoteDatasource.getAttendanceHistory(
+        startDate,
+        endDate,
+      );
       return Right(result);
     } catch (e) {
       return Left(Failure(message: e.toString()));

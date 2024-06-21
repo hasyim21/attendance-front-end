@@ -1,7 +1,9 @@
 part of 'get_permissions_bloc.dart';
 
 class GetPermissionsEvent extends Equatable {
-  const GetPermissionsEvent();
+  final int isApproved;
+
+  const GetPermissionsEvent({required this.isApproved});
 
   @override
   List<Object> get props => [];

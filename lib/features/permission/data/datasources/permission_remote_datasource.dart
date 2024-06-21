@@ -7,8 +7,13 @@ import '../../../auth/data/datasources/auth_local_datasource.dart';
 import '../models/permission_model.dart';
 
 abstract class PermissionRemoteDatasource {
-  Future<String> addPermission(String image, String date, String reason);
-  Future<List<PermissionModel>> getPermissions();
+  Future<String> addPermission(
+    String image,
+    String startDate,
+    String endDate,
+    String reason,
+  );
+  Future<List<PermissionModel>> getPermissions(int isApproved);
 }
 
 class PermissionRemoteDatasourceImpl extends PermissionRemoteDatasource {
@@ -19,7 +24,12 @@ class PermissionRemoteDatasourceImpl extends PermissionRemoteDatasource {
       {required this.client, required this.authLocalDatasource});
 
   @override
-  Future<String> addPermission(String image, String date, String reason) async {
+  Future<String> addPermission(
+    String image,
+    String startDate,
+    String endDate,
+    String reason,
+  ) async {
     final token = await authLocalDatasource.getToken();
     final url = Uri.parse('$mainUrl/permission');
     final headers = {
@@ -31,7 +41,8 @@ class PermissionRemoteDatasourceImpl extends PermissionRemoteDatasource {
     var request = http.MultipartRequest('POST', url);
     request.headers.addAll(headers);
     request.fields.addAll({
-      'date': date,
+      'start_date': startDate,
+      'end_date': endDate,
       'reason': reason,
     });
     request.files.add(await http.MultipartFile.fromPath('image', image));
@@ -46,9 +57,9 @@ class PermissionRemoteDatasourceImpl extends PermissionRemoteDatasource {
   }
 
   @override
-  Future<List<PermissionModel>> getPermissions() async {
+  Future<List<PermissionModel>> getPermissions(int isApproved) async {
     final token = await authLocalDatasource.getToken();
-    final url = Uri.parse('$mainUrl/permission');
+    final url = Uri.parse('$mainUrl/permission?is_approved=$isApproved');
     final headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',

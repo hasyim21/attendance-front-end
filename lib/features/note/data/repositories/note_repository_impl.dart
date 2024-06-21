@@ -29,4 +29,30 @@ class NoteRepositoryImpl extends NoteRepository {
       return Left(Failure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, String>> updateNote(
+    int id,
+    String title,
+    String note,
+    bool isCompleted,
+  ) async {
+    try {
+      final result =
+          await noteRemoteDatasource.updateNote(id, title, note, isCompleted);
+      return Right(result);
+    } catch (e) {
+      return Left(Failure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> deleteNote(int id) async {
+    try {
+      final result = await noteRemoteDatasource.deleteNote(id);
+      return Right(result);
+    } catch (e) {
+      return Left(Failure(message: e.toString()));
+    }
+  }
 }

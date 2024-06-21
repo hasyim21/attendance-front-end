@@ -15,7 +15,10 @@ abstract class AttendanceRemoteDatasource {
   Future<AttendanceModel> checkIn(String latitude, String longitude);
   Future<AttendanceModel> checkOut(String latitude, String longitude);
   Future<AttendanceStatusModel> checkAttendance();
-  Future<List<AttendanceModel>> getAttendanceHistory(String date);
+  Future<List<AttendanceModel>> getAttendanceHistory(
+    String startDate,
+    String endDate,
+  );
 }
 
 class AttendanceRemoteDatasourceImpl extends AttendanceRemoteDatasource {
@@ -144,9 +147,13 @@ class AttendanceRemoteDatasourceImpl extends AttendanceRemoteDatasource {
   }
 
   @override
-  Future<List<AttendanceModel>> getAttendanceHistory(String date) async {
+  Future<List<AttendanceModel>> getAttendanceHistory(
+    String startDate,
+    String endDate,
+  ) async {
     final token = await authLocalDatasource.getToken();
-    final url = Uri.parse('$mainUrl/attendance-history?date=$date');
+    final url = Uri.parse(
+        '$mainUrl/attendance-history?start_date=$startDate&end_date=$endDate');
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',

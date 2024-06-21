@@ -19,11 +19,8 @@ class UserProfile extends StatelessWidget {
           user = state.result;
         }
         return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const CircleAvatar(
-              backgroundColor: MyColors.white,
-            ),
-            const SpaceWidth(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -44,6 +41,10 @@ class UserProfile extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            const SpaceWidth(),
+            const CircleAvatar(
+              backgroundColor: MyColors.white,
             ),
           ],
         );

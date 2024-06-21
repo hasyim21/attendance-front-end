@@ -21,5 +21,8 @@ abstract class AttendanceRepository {
   );
   Future<Either<Failure, AttendanceStatus>> checkAttendance();
 
-  Future<Either<Failure, List<Attendance>>> getAttendanceHistory(String date);
+  Future<Either<Failure, List<Attendance>>> getAttendanceHistory(
+    String startDate,
+    String endDate,
+  );
 }

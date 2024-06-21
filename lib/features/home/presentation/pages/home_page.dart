@@ -11,6 +11,7 @@ import '../../../attendance/presentation/pages/check_out_page.dart';
 import '../../../note/presentation/bloc/get_notes/get_notes_bloc.dart';
 import '../../../profile/presentation/bloc/bloc/get_user_profile_bloc.dart';
 import '../widgets/attendance_button.dart';
+import '../widgets/date_and_clock.dart';
 import '../widgets/note_list.dart';
 import '../widgets/user_profile.dart';
 
@@ -43,86 +44,114 @@ class _HomePageState extends State<HomePage> {
           context.read<CheckAttendanceBloc>().add(const CheckAttendanceEvent());
           context.read<GetNotesBloc>().add(const GetNotesEvent());
         },
-        child: ListView(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              color: MyColors.primary,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        child: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Column(
                 children: [
-                  const UserProfile(),
-                  const SpaceHeight(16.0),
-                  Text(
-                    DateTime.now().toFormattedDate(),
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      color: MyColors.white,
-                    ),
-                  ),
-                  const SpaceHeight(),
-                  MultiBlocListener(
-                    listeners: [
-                      BlocListener<CheckAttendanceBloc, CheckAttendanceState>(
-                        listener: (context, state) {
-                          if (state is CheckAttendanceSuccess) {
-                            setState(() {
-                              attendanceStatus = state.result;
-                            });
-                          }
-                        },
-                      ),
-                      BlocListener<GetCompanyBloc, GetCompanyState>(
-                        listener: (context, state) {
-                          if (state is GetCompanySuccess) {
-                            setState(() {
-                              company = state.result;
-                            });
-                          }
-                        },
-                      ),
-                    ],
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  Container(
+                    padding: const EdgeInsets.all(12.0),
+                    color: MyColors.primary,
+                    child: const Column(
                       children: [
-                        AttendanceButton(
-                          label: 'Check In',
-                          iconPath: Icons.arrow_circle_down,
-                          time: '09:00 AM',
-                          onPressed: () async {
-                            await _detectFakeLocation();
-                            await _checkUserDistanceFromCompany();
-                            _checkInStatus();
-                          },
-                        ),
-                        const SpaceWidth(),
-                        AttendanceButton(
-                          label: 'Check Out',
-                          iconPath: Icons.arrow_circle_up,
-                          time: '05:00 PM',
-                          onPressed: () async {
-                            await _detectFakeLocation();
-                            await _checkUserDistanceFromCompany();
-                            _checkOutStatus();
-                          },
-                        ),
+                        UserProfile(),
+                        SpaceHeight(77.5),
                       ],
                     ),
                   ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                  )
                 ],
               ),
-            ),
-            const SpaceHeight(16.0),
-            const NoteList(),
-            const SpaceHeight(16.0),
-          ],
+              Positioned(
+                top: 75.0,
+                left: 12.0,
+                right: 12.0,
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12.0),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(12.0),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const DateAndClock(),
+                          const SpaceHeight(12.0),
+                          const MyDivider(thickness: 1.0),
+                          const SpaceHeight(12.0),
+                          MultiBlocListener(
+                            listeners: [
+                              BlocListener<CheckAttendanceBloc,
+                                  CheckAttendanceState>(
+                                listener: (context, state) {
+                                  if (state is CheckAttendanceSuccess) {
+                                    setState(() {
+                                      attendanceStatus = state.result;
+                                    });
+                                  }
+                                },
+                              ),
+                              BlocListener<GetCompanyBloc, GetCompanyState>(
+                                listener: (context, state) {
+                                  if (state is GetCompanySuccess) {
+                                    setState(() {
+                                      company = state.result;
+                                    });
+                                  }
+                                },
+                              ),
+                            ],
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                AttendanceButton(
+                                  label: 'Check In',
+                                  iconPath: Icons.arrow_circle_down,
+                                  buttonColor: Colors.green.shade500,
+                                  borderButtonColor: Colors.green.shade400,
+                                  time: '09:00 AM',
+                                  onPressed: () async {
+                                    await _checkIn();
+                                  },
+                                ),
+                                const SpaceWidth(12.0),
+                                AttendanceButton(
+                                  label: 'Check Out',
+                                  iconPath: Icons.arrow_circle_up,
+                                  buttonColor: Colors.red.shade500,
+                                  borderButtonColor: Colors.red.shade300,
+                                  time: '05:00 PM',
+                                  onPressed: () async {
+                                    await _checkOut();
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SpaceHeight(24.0),
+                    const NoteList(),
+                    const SpaceHeight(16.0),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Future<void> _detectFakeLocation() async {
+  Future<bool> _isLocationMocked() async {
     try {
       final isMocked = await LocationService.isLocationMocked();
 
@@ -132,8 +161,8 @@ class _HomePageState extends State<HomePage> {
           message: 'Anda menggunakan lokasi palsu',
           backgroundColor: MyColors.red,
         );
-        return;
       }
+      return isMocked;
     } catch (e) {
       if (mounted) {
         MySnackbar.show(
@@ -141,12 +170,12 @@ class _HomePageState extends State<HomePage> {
           message: 'Gagal mendeteksi lokasi: $e',
           backgroundColor: MyColors.red,
         );
-        return;
       }
+      return true;
     }
   }
 
-  Future<void> _checkUserDistanceFromCompany() async {
+  Future<bool> _isWithinCompanyRadius() async {
     final userPosition = await LocationService.getCurrentPosition();
     final distanceToCompany = LocationService.calculateDistance(
       userPosition.latitude ?? 0.0,
@@ -164,42 +193,57 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: MyColors.red,
         );
       }
-      return;
+      return false;
     }
+    return true;
   }
 
-  void _checkInStatus() {
+  Future<void> _checkIn() async {
+    if (await _isLocationMocked()) return;
+    if (!await _isWithinCompanyRadius()) return;
+
     if (attendanceStatus!.checkedin == true) {
-      MySnackbar.show(
-        context,
-        message: 'Anda telah melakukan Check In',
-        backgroundColor: MyColors.red,
-      );
+      if (mounted) {
+        MySnackbar.show(
+          context,
+          message: 'Anda telah melakukan Check In',
+          backgroundColor: MyColors.red,
+        );
+      }
       return;
     }
-
-    context.push(const CheckInPage());
+    if (mounted) {
+      context.push(const CheckInPage());
+    }
   }
 
-  void _checkOutStatus() {
+  Future<void> _checkOut() async {
+    if (await _isLocationMocked()) return;
+    if (!await _isWithinCompanyRadius()) return;
+
     if (attendanceStatus!.checkedin == false) {
-      MySnackbar.show(
-        context,
-        message: 'Anda belum melakukan Check In',
-        backgroundColor: MyColors.red,
-      );
+      if (mounted) {
+        MySnackbar.show(
+          context,
+          message: 'Anda belum melakukan Check In',
+          backgroundColor: MyColors.red,
+        );
+      }
       return;
     }
 
     if (attendanceStatus!.checkedout == true) {
-      MySnackbar.show(
-        context,
-        message: 'Anda telah melakukan Check Out',
-        backgroundColor: MyColors.red,
-      );
+      if (mounted) {
+        MySnackbar.show(
+          context,
+          message: 'Anda telah melakukan Check Out',
+          backgroundColor: MyColors.red,
+        );
+      }
       return;
     }
-
-    context.push(const CheckOutPage());
+    if (mounted) {
+      context.push(const CheckOutPage());
+    }
   }
 }

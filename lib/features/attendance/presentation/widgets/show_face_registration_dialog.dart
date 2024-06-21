@@ -59,7 +59,7 @@ void showFaceRegistrationDialogue(
                     );
                   }
 
-                  return Button.filled(
+                  return MyButton.filled(
                     onPressed: () {
                       context.read<UpdateFaceEmbeddingBloc>().add(
                             UpdateFaceEmbeddingEvent(

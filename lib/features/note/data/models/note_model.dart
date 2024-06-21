@@ -8,6 +8,7 @@ class NoteModel extends Note {
     required super.userId,
     required super.title,
     required super.note,
+    required super.isCompleted,
   });
 
   factory NoteModel.fromJson(String str) => NoteModel.fromMap(json.decode(str));
@@ -19,6 +20,7 @@ class NoteModel extends Note {
         userId: json["user_id"],
         title: json["title"],
         note: json["note"],
+        isCompleted: json['is_completed'] == 0 ? false : true,
       );
 
   Map<String, dynamic> toMap() => {
@@ -26,13 +28,20 @@ class NoteModel extends Note {
         "user_id": userId,
         "title": title,
         "note": note,
+        "is_completed": isCompleted,
       };
 
   @override
-  List<Object> get props => [id, userId, title, note];
+  List<Object> get props => [
+        id,
+        userId,
+        title,
+        note,
+        isCompleted,
+      ];
 
   @override
   String toString() {
-    return 'Note(id: $id, userId: $userId, title: $title, note: $note)';
+    return 'Note(id: $id, userId: $userId, title: $title, note: $note, isCompleted: $isCompleted)';
   }
 }

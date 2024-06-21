@@ -15,7 +15,8 @@ class AddPermissionBloc extends Bloc<AddPermissionEvent, AddPermissionState> {
       emit(AddPermissionLoading());
       final result = await _addPermission.call(
         image: event.image,
-        date: event.date,
+        startDate: event.startDate,
+        endDate: event.endDate,
         reason: event.reason,
       );
 
