@@ -20,8 +20,16 @@ class _DetailPermissionPageState extends State<DetailPermissionPage> {
   @override
   void initState() {
     super.initState();
-    _startDateController.text = widget.permission.startDate;
-    _endDateController.text = widget.permission.startDate;
+    _initializeControllers();
+  }
+
+  void _initializeControllers() {
+    _startDateController.text = widget.permission.startDate.isNotEmpty
+        ? widget.permission.startDate.toFormattedDatewithDay()
+        : '-';
+    _endDateController.text = widget.permission.endDate.isNotEmpty
+        ? widget.permission.endDate.toFormattedDatewithDay()
+        : '-';
     _reasonController.text = widget.permission.reason;
   }
 
@@ -40,22 +48,25 @@ class _DetailPermissionPageState extends State<DetailPermissionPage> {
         title: const Text('Detail Izin'),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12.0),
         children: [
           MyTextField(
             controller: _reasonController,
             label: 'Keperluan',
             maxLines: 5,
+            readOnly: true,
           ),
           const SpaceHeight(16.0),
           MyTextField(
             controller: _startDateController,
             label: 'Tanggal Mulai',
+            readOnly: true,
           ),
           const SpaceHeight(16.0),
           MyTextField(
             controller: _endDateController,
             label: 'Tanggal Selesai',
+            readOnly: true,
           ),
           const SpaceHeight(16.0),
           Column(
@@ -85,7 +96,7 @@ class _DetailPermissionPageState extends State<DetailPermissionPage> {
               ),
             ],
           ),
-          const SpaceHeight(16.0),
+          const SpaceHeight(32.0),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

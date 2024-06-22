@@ -4,7 +4,6 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../core/core.dart';
 import '../../../home/presentation/pages/main_page.dart';
@@ -45,13 +44,6 @@ class _AddPermissionPageState extends State<AddPermissionPage> {
     });
   }
 
-  String formatDate(DateTime date) {
-    // Gunakan DateFormat untuk mengatur format tanggal
-    final dateFormatter = DateFormat('yyyy-MM-dd');
-    // Kembalikan tanggal dalam format yang dinginkan
-    return dateFormatter.format(date);
-  }
-
   @override
   void dispose() {
     _startDateController.dispose();
@@ -67,7 +59,7 @@ class _AddPermissionPageState extends State<AddPermissionPage> {
         title: const Text('Buat Izin'),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12.0),
         children: [
           MyTextField(
             controller: _reasonController,
@@ -78,13 +70,13 @@ class _AddPermissionPageState extends State<AddPermissionPage> {
           MyDatePicker(
             label: 'Tanggal Mulai',
             onDateSelected: (selectedDate) =>
-                _startDateController.text = formatDate(selectedDate).toString(),
+                _startDateController.text = selectedDate.toIsoFormattedDate(),
           ),
           const SpaceHeight(16.0),
           MyDatePicker(
             label: 'Tanggal Selesai',
             onDateSelected: (selectedDate) =>
-                _endDateController.text = formatDate(selectedDate).toString(),
+                _endDateController.text = selectedDate.toIsoFormattedDate(),
           ),
           const SpaceHeight(16.0),
           Column(

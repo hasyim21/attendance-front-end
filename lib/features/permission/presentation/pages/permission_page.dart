@@ -81,39 +81,30 @@ class _PermissionPageState extends State<PermissionPage> {
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
               child: SizedBox(
                 height: 35.0,
-                child: BlocBuilder<GetPermissionsBloc, GetPermissionsState>(
-                  builder: (context, state) {
-                    if (state is GetPermissionsLoading) {
-                      return const ShimmerHorizontalLoading();
-                    }
-                    return ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        PermissionCategoryItem(
-                          label: 'Semua',
-                          isSelected: _selectedIndex == 0,
-                          onTap: () => _onTap(0, PermissionStatus.all.value),
-                        ),
-                        PermissionCategoryItem(
-                          label: 'Diproses',
-                          isSelected: _selectedIndex == 1,
-                          onTap: () =>
-                              _onTap(1, PermissionStatus.process.value),
-                        ),
-                        PermissionCategoryItem(
-                          label: 'Disetujui',
-                          isSelected: _selectedIndex == 2,
-                          onTap: () =>
-                              _onTap(2, PermissionStatus.approved.value),
-                        ),
-                        PermissionCategoryItem(
-                          label: 'Ditolak',
-                          isSelected: _selectedIndex == 3,
-                          onTap: () => _onTap(3, PermissionStatus.reject.value),
-                        ),
-                      ],
-                    );
-                  },
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    PermissionCategoryItem(
+                      label: 'Semua',
+                      isSelected: _selectedIndex == 0,
+                      onTap: () => _onTap(0, PermissionStatus.all.value),
+                    ),
+                    PermissionCategoryItem(
+                      label: 'Diproses',
+                      isSelected: _selectedIndex == 1,
+                      onTap: () => _onTap(1, PermissionStatus.process.value),
+                    ),
+                    PermissionCategoryItem(
+                      label: 'Disetujui',
+                      isSelected: _selectedIndex == 2,
+                      onTap: () => _onTap(2, PermissionStatus.approved.value),
+                    ),
+                    PermissionCategoryItem(
+                      label: 'Ditolak',
+                      isSelected: _selectedIndex == 3,
+                      onTap: () => _onTap(3, PermissionStatus.reject.value),
+                    ),
+                  ],
                 ),
               ),
             ),
