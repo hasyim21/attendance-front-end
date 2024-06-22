@@ -12,9 +12,9 @@ class UserProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    User? user;
     return BlocBuilder<GetUserProfileBloc, GetUserProfileState>(
       builder: (context, state) {
-        User? user;
         if (state is GetUserProfileSuccess) {
           user = state.result;
         }
@@ -43,8 +43,11 @@ class UserProfile extends StatelessWidget {
               ],
             ),
             const SpaceWidth(),
-            const CircleAvatar(
+            CircleAvatar(
               backgroundColor: MyColors.white,
+              backgroundImage: (user?.imageUrl != null)
+                  ? NetworkImage('$urlProfileImage${user?.imageUrl}')
+                  : null,
             ),
           ],
         );

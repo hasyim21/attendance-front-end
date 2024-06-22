@@ -9,6 +9,7 @@ class User extends Equatable {
   final String position;
   final String department;
   final String faceEmbedding;
+  final String imageUrl;
 
   const User({
     required this.id,
@@ -19,6 +20,7 @@ class User extends Equatable {
     required this.position,
     required this.department,
     required this.faceEmbedding,
+    required this.imageUrl,
   });
 
   @override
@@ -32,11 +34,12 @@ class User extends Equatable {
       position,
       department,
       faceEmbedding,
+      imageUrl,
     ];
   }
 
   @override
   String toString() {
-    return 'User(id: $id, name: $name, email: $email, phone: $phone, role: $role, position: $position, department: $department, faceEmbedding: $faceEmbedding)';
+    return 'User(id: $id, name: $name, email: $email, phone: $phone, role: $role, position: $position, department: $department, faceEmbedding: $faceEmbedding, imageUrl: $imageUrl)';
   }
 }

@@ -12,6 +12,7 @@ class UserModel extends User {
     required super.position,
     required super.department,
     required super.faceEmbedding,
+    required super.imageUrl,
   });
 
   factory UserModel.fromJson(String str) => UserModel.fromMap(json.decode(str));
@@ -26,7 +27,8 @@ class UserModel extends User {
         role: json["role"],
         position: json["position"],
         department: json["department"],
-        faceEmbedding: json["face_embedding"] ?? '',
+        faceEmbedding: json["face_embedding"] ?? '-',
+        imageUrl: json["image_url"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -38,6 +40,7 @@ class UserModel extends User {
         "position": position,
         "department": department,
         "face_embedding": faceEmbedding,
+        "image_url": imageUrl,
       };
 
   UserModel copyWith({
@@ -49,6 +52,7 @@ class UserModel extends User {
     String? position,
     String? department,
     String? faceEmbedding,
+    String? imageUrl,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -59,6 +63,7 @@ class UserModel extends User {
       position: position ?? this.position,
       department: department ?? this.department,
       faceEmbedding: faceEmbedding ?? this.faceEmbedding,
+      imageUrl: imageUrl ?? this.imageUrl,
     );
   }
 
@@ -72,6 +77,7 @@ class UserModel extends User {
       position: '-',
       department: '-',
       faceEmbedding: '-',
+      imageUrl: '-',
     );
   }
 
@@ -86,11 +92,12 @@ class UserModel extends User {
       position,
       department,
       faceEmbedding,
+      imageUrl,
     ];
   }
 
   @override
   String toString() {
-    return 'UserModel(id: $id, name: $name, email: $email, phone: $phone, role: $role, position: $position, department: $department, faceEmbedding: $faceEmbedding)';
+    return 'UserModel(id: $id, name: $name, email: $email, phone: $phone, role: $role, position: $position, department: $department, faceEmbedding: $faceEmbedding, imageUrl: $imageUrl)';
   }
 }

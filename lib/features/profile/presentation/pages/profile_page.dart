@@ -33,10 +33,13 @@ class ProfilePage extends StatelessWidget {
                 color: MyColors.white,
                 child: Column(
                   children: [
-                    const Center(
+                    Center(
                       child: CircleAvatar(
                         radius: 60.0,
                         backgroundColor: MyColors.primary,
+                        backgroundImage: (user?.imageUrl != null)
+                            ? NetworkImage('$urlProfileImage${user?.imageUrl}')
+                            : null,
                       ),
                     ),
                     const SpaceHeight(8.0),
