@@ -37,7 +37,7 @@ class _AddNotePageState extends State<AddNotePage> {
         title: const Text('Tambah Catatan'),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12.0),
         children: [
           MyTextField(
             controller: _titleController,

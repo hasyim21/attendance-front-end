@@ -40,7 +40,7 @@ class _DetailNotePageState extends State<DetailNotePage> {
         title: const Text('Detail Catatan'),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12.0),
         children: [
           MyTextField(
             controller: _titleController,
