@@ -1,11 +1,8 @@
+import 'dart:developer';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:http/http.dart' as http;
-
-import '../../../features/auth/data/datasources/auth_local_datasource.dart';
-import '../../../features/auth/data/datasources/auth_remote_datasource.dart';
-import '../../../main.dart';
 
 class NotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -24,32 +21,27 @@ class NotificationService {
         requestAlertPermission: true,
         requestBadgePermission: true,
         requestSoundPermission: true,
-        onDidReceiveLocalNotification:
-            (int id, String? title, String? body, String? payload) async {
-          // showNotification(id: id, title: title, body: body, payLoad: payload);
-        });
+        onDidReceiveLocalNotification: (
+          int id,
+          String? title,
+          String? body,
+          String? payload,
+        ) async {});
 
     final initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+    );
+
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onDidReceiveNotificationResponse:
-            (NotificationResponse notificationResponse) async {});
-
-    final fcmToken = await _firebaseMessaging.getToken();
-
-    print('FCM Token: $fcmToken');
-
-    if (await AuthLocalDatasourceImpl(prefs: prefs).getUser() != null) {
-      AuthRemoteDatasourceImpl(
-              client: http.Client(),
-              authLocalDatasource: AuthLocalDatasourceImpl(prefs: prefs))
-          .updateFcmToken(fcmToken!);
-    }
+        onDidReceiveNotificationResponse: (
+          NotificationResponse notificationResponse,
+        ) async {});
 
     FirebaseMessaging.instance.getInitialMessage();
     FirebaseMessaging.onMessage.listen((message) {
-      print(message.notification?.body);
-      print(message.notification?.title);
+      log('${message.notification?.body}');
+      log('${message.notification?.title}');
     });
 
     FirebaseMessaging.onMessage.listen(firebaseBackgroundHandler);

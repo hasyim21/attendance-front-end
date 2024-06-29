@@ -7,7 +7,6 @@ export 'utils/extensions/extensions.dart';
 export 'utils/failure/failure.dart';
 export 'utils/ml_kit/recognition_embedding.dart';
 export 'utils/ml_kit/recognizer.dart';
-export 'utils/services/camera_service.dart';
 export 'utils/services/image_service.dart';
 export 'utils/services/location_service.dart';
 export 'utils/services/notification_service.dart';

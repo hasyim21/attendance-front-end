@@ -79,7 +79,6 @@ class _AttendanceHistoryPageState extends State<AttendanceHistoryPage> {
               endDateController: _endDateController,
               onSearch: _getAttendanceHistory,
             ),
-            const SpaceHeight(12.0),
             BlocBuilder<GetAttendanceHistoryBloc, GetAttendanceHistoryState>(
               builder: (context, state) {
                 switch (state.runtimeType) {

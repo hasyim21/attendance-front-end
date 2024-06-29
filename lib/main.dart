@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -10,7 +11,7 @@ import 'features/auth/presentation/pages/splash_page.dart';
 import 'firebase_options.dart';
 
 late SharedPreferences prefs;
-
+late List<CameraDescription> cameras;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('id_ID', null);
@@ -19,8 +20,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   await NotificationService().initialize();
+  cameras = await availableCameras();
   runApp(
     MyApp(authLocalDatasource: authLocalDatasource),
   );

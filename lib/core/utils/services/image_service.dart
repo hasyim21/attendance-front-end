@@ -23,19 +23,17 @@ class ImageService {
         final u = cameraImage.planes[1].bytes[uvIndex];
         final v = cameraImage.planes[2].bytes[uvIndex];
 
-        image.data!.setPixelR(w, h, yuv2rgb(y, u, v)); //= yuv2rgb(y, u, v);
+        image.data!.setPixelR(w, h, yuv2rgb(y, u, v));
       }
     }
     return image;
   }
 
   static int yuv2rgb(int y, int u, int v) {
-    // Convert yuv pixel to rgb
     var r = (y + v * 1436 / 1024 - 179).round();
     var g = (y - u * 46549 / 131072 + 44 - v * 93604 / 131072 + 91).round();
     var b = (y + u * 1814 / 1024 - 227).round();
 
-    // Clipping RGB values to be inside boundaries [ 0 , 255 ]
     r = r.clamp(0, 255);
     g = g.clamp(0, 255);
     b = b.clamp(0, 255);

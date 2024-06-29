@@ -45,6 +45,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(toolbarHeight: 0.0),
       body: RefreshIndicator(
         onRefresh: () async {
+          context.read<GetUserProfileBloc>().add(const GetUserProfileEvent());
           context.read<CheckAttendanceBloc>().add(const CheckAttendanceEvent());
           context.read<NotesBloc>().add(RefreshNotesEvent());
         },
@@ -195,15 +196,14 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    if (!_isLateToCheckIn(user.timeIn)) {
-      MySnackbar.show(
-        context,
-        message:
-            'Gagal Check In!. Telat lebih dari ${company!.lateTolerance} menit',
-        backgroundColor: MyColors.red,
-      );
-      return;
-    }
+    // if (!_isLateToCheckIn(user.timeIn)) {
+    //   MySnackbar.show(
+    //     context,
+    //     message: 'Gagal Check In!. Anda sudah telat!',
+    //     backgroundColor: MyColors.red,
+    //   );
+    //   return;
+    // }
 
     if (await _isLocationMocked()) return;
     if (!await _isWithinCompanyRadius()) return;
@@ -236,15 +236,14 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    if (!_isTimeToCheckOut(user.timeOut)) {
-      MySnackbar.show(
-        context,
-        message:
-            'Gagal Check Out! Waktu Check Out anda adalah ${user.timeOut.toFormattedTime()}',
-        backgroundColor: MyColors.red,
-      );
-      return;
-    }
+    // if (!_isTimeToCheckOut(user.timeOut)) {
+    //   MySnackbar.show(
+    //     context,
+    //     message: 'Gagal Check Out!.Belum waktunya Check Out!',
+    //     backgroundColor: MyColors.red,
+    //   );
+    //   return;
+    // }
 
     if (await _isLocationMocked()) return;
     if (!await _isWithinCompanyRadius()) return;
@@ -257,12 +256,35 @@ class _HomePageState extends State<HomePage> {
   bool _isLateToCheckIn(String time) {
     DateTime targetTime = DateFormat('HH:mm:ss').parse(time);
     DateTime now = DateTime.now();
-    return now.difference(targetTime).inMinutes <= company!.lateTolerance;
+
+    targetTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      targetTime.hour,
+      targetTime.minute,
+      targetTime.second,
+    );
+
+    int differenceInMinutes = now.difference(targetTime).inMinutes;
+    return now.isBefore(targetTime) ||
+        now.isAtSameMomentAs(targetTime) ||
+        differenceInMinutes <= company!.lateTolerance;
   }
 
   bool _isTimeToCheckOut(String time) {
     DateTime targetTime = DateFormat('HH:mm:ss').parse(time);
     DateTime now = DateTime.now();
+
+    targetTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      targetTime.hour,
+      targetTime.minute,
+      targetTime.second,
+    );
+
     return now.isAtSameMomentAs(targetTime) || now.isAfter(targetTime);
   }
 
