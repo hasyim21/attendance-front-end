@@ -7,18 +7,33 @@ class ShimmerVerticalLoading extends StatelessWidget {
   final double height;
   final bool isScrolled;
   final bool? usePadding;
+  final double? topPadding;
+  final double? bottomPadding;
+  final double? leftPadding;
+  final double? rightPadding;
 
   const ShimmerVerticalLoading({
     super.key,
     required this.height,
     required this.isScrolled,
     this.usePadding = true,
+    this.topPadding = 12.0,
+    this.bottomPadding = 12.0,
+    this.leftPadding = 12.0,
+    this.rightPadding = 12.0,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      padding: usePadding! ? const EdgeInsets.all(12.0) : null,
+      padding: usePadding!
+          ? EdgeInsets.only(
+              top: topPadding ?? 12.0,
+              bottom: bottomPadding ?? 12.0,
+              left: leftPadding ?? 12.0,
+              right: rightPadding ?? 12.0,
+            )
+          : null,
       itemCount: 10,
       shrinkWrap: isScrolled ? false : true,
       physics: isScrolled ? null : const NeverScrollableScrollPhysics(),

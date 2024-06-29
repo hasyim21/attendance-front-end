@@ -76,8 +76,12 @@ class _NoteListState extends State<NoteList> {
                 ),
               );
             case NotesStatus.initial:
-              return const Center(
-                child: CircularProgressIndicator(),
+              return const Expanded(
+                child: ShimmerVerticalLoading(
+                  height: 64.0,
+                  isScrolled: true,
+                  usePadding: false,
+                ),
               );
           }
         },

@@ -142,6 +142,7 @@ class _PermissionPageState extends State<PermissionPage> {
                       child: ShimmerVerticalLoading(
                         height: 109.0,
                         isScrolled: true,
+                        topPadding: 0.0,
                       ),
                     );
                 }
