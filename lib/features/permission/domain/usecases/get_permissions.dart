@@ -9,7 +9,15 @@ class GetPermissions {
 
   GetPermissions(this._permissionRepository);
 
-  Future<Either<Failure, List<Permission>>> call(int isApproved) async {
-    return await _permissionRepository.getPermissions(isApproved);
+  Future<Either<Failure, List<Permission>>> call({
+    required int isApproved,
+    required int page,
+    required int perPage,
+  }) async {
+    return await _permissionRepository.getPermissions(
+      isApproved,
+      page,
+      perPage,
+    );
   }
 }

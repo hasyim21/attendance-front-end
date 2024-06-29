@@ -13,7 +13,8 @@ abstract class PermissionRemoteDatasource {
     String endDate,
     String reason,
   );
-  Future<List<PermissionModel>> getPermissions(int isApproved);
+  Future<List<PermissionModel>> getPermissions(
+      int isApproved, int page, int perPage);
 }
 
 class PermissionRemoteDatasourceImpl extends PermissionRemoteDatasource {
@@ -57,9 +58,15 @@ class PermissionRemoteDatasourceImpl extends PermissionRemoteDatasource {
   }
 
   @override
-  Future<List<PermissionModel>> getPermissions(int isApproved) async {
+  Future<List<PermissionModel>> getPermissions(
+    int isApproved,
+    int page,
+    int perPage,
+  ) async {
     final token = await authLocalDatasource.getToken();
-    final url = Uri.parse('$mainUrl/permission?is_approved=$isApproved');
+    final url = Uri.parse(
+      '$mainUrl/permission?is_approved=$isApproved&page=$page&per_page=$perPage',
+    );
     final headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
@@ -73,7 +80,7 @@ class PermissionRemoteDatasourceImpl extends PermissionRemoteDatasource {
 
     if (response.statusCode == 200) {
       final body = json.decode(response.body);
-      final data = body['permissions'] as List;
+      final data = body['data'] as List;
       final notes = data.map((e) => PermissionModel.fromMap(e)).toList();
       return notes;
     } else {

@@ -138,12 +138,14 @@ class _AddPermissionPageState extends State<AddPermissionPage> {
                 setState(() {
                   imagePath = null;
                 });
-
                 MySnackbar.show(
                   context,
                   message: 'Submit Izin success',
                 );
-                context.pushReplacement(const MainPage());
+                context.pushAndRemoveUntil(
+                  const MainPage(),
+                  (route) => false,
+                );
               }
             },
             builder: (context, state) {

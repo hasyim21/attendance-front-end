@@ -10,5 +10,9 @@ abstract class PermissionRepository {
     String endDate,
     String reason,
   );
-  Future<Either<Failure, List<Permission>>> getPermissions(int isApproved);
+  Future<Either<Failure, List<Permission>>> getPermissions(
+    int isApproved,
+    int page,
+    int perPage,
+  );
 }

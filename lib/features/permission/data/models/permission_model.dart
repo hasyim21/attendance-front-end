@@ -36,4 +36,17 @@ class PermissionModel extends Permission {
         "image": image,
         "is_approved": isApproved,
       };
+
+  @override
+  List<Object> get props {
+    return [
+      id,
+      userId,
+      startDate,
+      endDate,
+      reason,
+      image,
+      isApproved,
+    ];
+  }
 }

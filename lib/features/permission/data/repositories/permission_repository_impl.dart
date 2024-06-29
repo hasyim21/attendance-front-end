@@ -32,10 +32,16 @@ class PermissionRepositoryImpl extends PermissionRepository {
 
   @override
   Future<Either<Failure, List<Permission>>> getPermissions(
-      int isApproved) async {
+    int isApproved,
+    int page,
+    int perPage,
+  ) async {
     try {
-      final result =
-          await permissionRemoteDatasource.getPermissions(isApproved);
+      final result = await permissionRemoteDatasource.getPermissions(
+        isApproved,
+        page,
+        perPage,
+      );
       return Right(result);
     } catch (e) {
       return Left(Failure(message: e.toString()));
