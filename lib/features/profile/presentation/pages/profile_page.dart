@@ -5,7 +5,7 @@ import '../../../../core/core.dart';
 import '../../../auth/domain/entities/user.dart';
 import '../../../auth/presentation/bloc/logout/logout_bloc.dart';
 import '../../../auth/presentation/pages/login_page.dart';
-import '../bloc/bloc/get_user_profile_bloc.dart';
+import '../bloc/get_user_profile/get_user_profile_bloc.dart';
 import '../widgets/profile_menu.dart';
 
 class ProfilePage extends StatelessWidget {

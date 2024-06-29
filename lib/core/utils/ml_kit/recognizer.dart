@@ -98,7 +98,7 @@ class Recognizer {
     final faceEmbedding = userData!.faceEmbedding;
     PairEmbedding pair = findNearest(
         emb,
-        faceEmbedding
+        faceEmbedding!
             .split(',')
             .map((e) => double.parse(e))
             .toList()

@@ -13,6 +13,8 @@ class UserModel extends User {
     required super.department,
     required super.faceEmbedding,
     required super.imageUrl,
+    required super.timeIn,
+    required super.timeOut,
   });
 
   factory UserModel.fromJson(String str) => UserModel.fromMap(json.decode(str));
@@ -27,8 +29,10 @@ class UserModel extends User {
         role: json["role"],
         position: json["position"],
         department: json["department"],
-        faceEmbedding: json["face_embedding"] ?? '-',
+        faceEmbedding: json["face_embedding"],
         imageUrl: json["image_url"],
+        timeIn: json["time_in"],
+        timeOut: json["time_out"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -41,6 +45,8 @@ class UserModel extends User {
         "department": department,
         "face_embedding": faceEmbedding,
         "image_url": imageUrl,
+        "time_in": timeIn,
+        "time_out": timeOut,
       };
 
   UserModel copyWith({
@@ -53,6 +59,8 @@ class UserModel extends User {
     String? department,
     String? faceEmbedding,
     String? imageUrl,
+    String? timeIn,
+    String? timeOut,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -64,6 +72,8 @@ class UserModel extends User {
       department: department ?? this.department,
       faceEmbedding: faceEmbedding ?? this.faceEmbedding,
       imageUrl: imageUrl ?? this.imageUrl,
+      timeIn: timeIn ?? this.timeIn,
+      timeOut: timeOut ?? this.timeOut,
     );
   }
 
@@ -76,13 +86,15 @@ class UserModel extends User {
       role: '-',
       position: '-',
       department: '-',
-      faceEmbedding: '-',
+      faceEmbedding: null,
       imageUrl: '-',
+      timeIn: '-',
+      timeOut: '-',
     );
   }
 
   @override
-  List<Object> get props {
+  List<Object?> get props {
     return [
       id,
       name,
@@ -93,11 +105,13 @@ class UserModel extends User {
       department,
       faceEmbedding,
       imageUrl,
+      timeIn,
+      timeOut,
     ];
   }
 
   @override
   String toString() {
-    return 'UserModel(id: $id, name: $name, email: $email, phone: $phone, role: $role, position: $position, department: $department, faceEmbedding: $faceEmbedding, imageUrl: $imageUrl)';
+    return 'UserModel(id: $id, name: $name, email: $email, phone: $phone, role: $role, position: $position, department: $department, faceEmbedding: $faceEmbedding, imageUrl: $imageUrl, timeIn: $timeIn, timeOut: $timeOut)';
   }
 }

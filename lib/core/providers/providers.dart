@@ -33,7 +33,7 @@ import '../../features/note/domain/usecases/get_notes.dart';
 import '../../features/note/domain/usecases/update_note.dart';
 import '../../features/note/presentation/bloc/add_note/add_note_bloc.dart';
 import '../../features/note/presentation/bloc/delete_note/delete_note_bloc.dart';
-import '../../features/note/presentation/bloc/get_notes/get_notes_bloc.dart';
+import '../../features/note/presentation/bloc/notes/notes_bloc.dart';
 import '../../features/note/presentation/bloc/update_note/update_note_bloc.dart';
 import '../../features/permission/data/datasources/permission_remote_datasource.dart';
 import '../../features/permission/data/repositories/permission_repository_impl.dart';
@@ -41,10 +41,10 @@ import '../../features/permission/domain/usecases/add_permission.dart';
 import '../../features/permission/domain/usecases/get_permissions.dart';
 import '../../features/permission/presentation/bloc/add_permission/add_permission_bloc.dart';
 import '../../features/permission/presentation/bloc/get_permissions/get_permissions_bloc.dart';
-import '../../features/profile/data/datasources/profile_local_datasource.dart';
+import '../../features/profile/data/datasources/profile_remote_datasource.dart';
 import '../../features/profile/data/repositories/profile_repository_impl.dart';
 import '../../features/profile/domain/usecases/get_user_profile.dart';
-import '../../features/profile/presentation/bloc/bloc/get_user_profile_bloc.dart';
+import '../../features/profile/presentation/bloc/get_user_profile/get_user_profile_bloc.dart';
 
 class Providers extends StatelessWidget {
   final http.Client client;
@@ -53,9 +53,9 @@ class Providers extends StatelessWidget {
 
   const Providers({
     super.key,
+    required this.client,
     required this.authLocalDatasource,
     required this.app,
-    required this.client,
   });
 
   @override
@@ -97,7 +97,8 @@ class Providers extends StatelessWidget {
         ),
         RepositoryProvider(
           create: (context) => ProfileRepositoryImpl(
-            profileLocalDatasource: ProfileLocalDatasourceImpl(
+            profileRemoteDatasource: ProfileRemoteDatasourceImpl(
+              client: client,
               authLocalDatasource: authLocalDatasource,
             ),
           ),
@@ -186,7 +187,7 @@ class Providers extends StatelessWidget {
             ),
           ),
           BlocProvider(
-            create: (context) => GetNotesBloc(
+            create: (context) => NotesBloc(
               GetNotes(
                 context.read<NoteRepositoryImpl>(),
               ),

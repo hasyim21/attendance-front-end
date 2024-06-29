@@ -16,39 +16,52 @@ void showFaceRegistrationDialogue(
   showDialog(
     context: context,
     builder: (ctx) => AlertDialog(
-      title: const Text("Face Registration", textAlign: TextAlign.center),
+      title: const Text(
+        'Daftar Wajah',
+        textAlign: TextAlign.center,
+      ),
       alignment: Alignment.center,
-      content: SizedBox(
-        height: MediaQuery.of(context).size.height / 2,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            Image.memory(
-              Uint8List.fromList(img.encodeBmp(croppedFace)),
-              width: 200,
-              height: 200,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: BlocConsumer<UpdateFaceEmbeddingBloc,
-                  UpdateFaceEmbeddingState>(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      contentPadding: const EdgeInsets.all(16.0),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.memory(
+            Uint8List.fromList(img.encodeBmp(croppedFace)),
+            width: 200,
+            height: 200,
+          ),
+          const SpaceHeight(24.0),
+          Row(
+            children: [
+              Expanded(
+                child: MyButton.outlined(
+                  onPressed: () => context.pop(),
+                  label: 'Batal',
+                ),
+              ),
+              const SpaceWidth(12.0),
+              BlocConsumer<UpdateFaceEmbeddingBloc, UpdateFaceEmbeddingState>(
                 listener: (context, state) {
                   if (state is UpdateFaceEmbeddingSuccess) {
                     context.pushAndRemoveUntil(
                       const MainPage(),
                       (route) => false,
                     );
+                    MySnackbar.show(
+                      context,
+                      message: 'Daftar wajah berhasil',
+                    );
                   }
 
                   if (state is UpdateFaceEmbeddingError) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(state.failure.message),
-                      ),
+                    MySnackbar.show(
+                      context,
+                      message: state.failure.message,
+                      backgroundColor: MyColors.red,
                     );
                   }
                 },
@@ -59,23 +72,24 @@ void showFaceRegistrationDialogue(
                     );
                   }
 
-                  return MyButton.filled(
-                    onPressed: () {
-                      context.read<UpdateFaceEmbeddingBloc>().add(
-                            UpdateFaceEmbeddingEvent(
-                              faceEmbedding: recognition.embedding.join(','),
-                            ),
-                          );
-                    },
-                    label: 'Register',
+                  return Expanded(
+                    child: MyButton.filled(
+                      onPressed: () {
+                        context.read<UpdateFaceEmbeddingBloc>().add(
+                              UpdateFaceEmbeddingEvent(
+                                faceEmbedding: recognition.embedding.join(','),
+                              ),
+                            );
+                      },
+                      label: 'Daftar',
+                    ),
                   );
                 },
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
-      contentPadding: EdgeInsets.zero,
     ),
   );
 }

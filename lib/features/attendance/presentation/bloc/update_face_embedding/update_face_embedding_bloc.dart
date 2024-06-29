@@ -34,7 +34,7 @@ class UpdateFaceEmbeddingBloc
         ),
         (r) async {
           emit(UpdateFaceEmbeddingSuccess(result: r));
-          await authLocalDatasource.updateFaceEmbedding(r.user.faceEmbedding);
+          await authLocalDatasource.updateFaceEmbedding(r.user.faceEmbedding!);
         },
       );
     });

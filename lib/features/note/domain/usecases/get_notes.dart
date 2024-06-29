@@ -9,7 +9,10 @@ class GetNotes {
 
   GetNotes(this._noteRepository);
 
-  Future<Either<Failure, List<Note>>> call() async {
-    return await _noteRepository.getNotes();
+  Future<Either<Failure, List<Note>>> call({
+    required int page,
+    required int perPage,
+  }) async {
+    return await _noteRepository.getNotes(page, perPage);
   }
 }

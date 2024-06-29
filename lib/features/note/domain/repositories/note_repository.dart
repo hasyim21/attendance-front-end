@@ -4,7 +4,7 @@ import '../../../../core/core.dart';
 import '../entities/note.dart';
 
 abstract class NoteRepository {
-  Future<Either<Failure, List<Note>>> getNotes();
+  Future<Either<Failure, List<Note>>> getNotes(int page, int perPage);
   Future<Either<Failure, String>> addNote(String title, String note);
   Future<Either<Failure, String>> updateNote(
     int id,

@@ -10,8 +10,7 @@ class CompanyModel extends Company {
     required super.latitude,
     required super.longitude,
     required super.radiusKm,
-    required super.timeIn,
-    required super.timeOut,
+    required super.lateTolerance,
   });
 
   factory CompanyModel.fromJson(String str) =>
@@ -28,8 +27,7 @@ class CompanyModel extends Company {
       latitude: company["latitude"],
       longitude: company["longitude"],
       radiusKm: company["radius_km"],
-      timeIn: company["time_in"],
-      timeOut: company["time_out"],
+      lateTolerance: company["late_tolerance"],
     );
   }
 
@@ -41,8 +39,7 @@ class CompanyModel extends Company {
           "latitude": latitude,
           "longitude": longitude,
           "radius_km": radiusKm,
-          "time_in": timeIn,
-          "time_out": timeOut,
+          "late_tolerance": lateTolerance,
         },
       };
 
@@ -55,13 +52,12 @@ class CompanyModel extends Company {
       latitude,
       longitude,
       radiusKm,
-      timeIn,
-      timeOut,
+      lateTolerance,
     ];
   }
 
   @override
   String toString() {
-    return 'CompanyModel(name: $name, email: $email, address: $address, latitude: $latitude, longitude: $longitude, radiusKm: $radiusKm, timeIn: $timeIn, timeOut: $timeOut)';
+    return 'CompanyModel(name: $name, email: $email, address: $address, latitude: $latitude, longitude: $longitude, radiusKm: $radiusKm, lateTolerance: $lateTolerance)';
   }
 }

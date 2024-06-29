@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
 import '../bloc/add_note/add_note_bloc.dart';
-import '../bloc/get_notes/get_notes_bloc.dart';
+import '../bloc/notes/notes_bloc.dart';
 
 class AddNotePage extends StatefulWidget {
   const AddNotePage({super.key});
@@ -57,7 +57,7 @@ class _AddNotePageState extends State<AddNotePage> {
                 showDialogLoading(context);
               }
               if (state is AddNoteSuccess) {
-                context.read<GetNotesBloc>().add(const GetNotesEvent());
+                context.read<NotesBloc>().add(RefreshNotesEvent());
                 context.popToRoot();
               }
             },

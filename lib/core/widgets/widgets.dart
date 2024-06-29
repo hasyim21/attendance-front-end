@@ -1,3 +1,4 @@
+export 'bottom_loading.dart';
 export 'circular_loading.dart';
 export 'dialog_loading.dart';
 export 'divider.dart';

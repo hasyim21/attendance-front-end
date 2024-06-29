@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
-import '../../../auth/domain/entities/user.dart';
-import '../../../profile/presentation/bloc/bloc/get_user_profile_bloc.dart';
+import '../../../profile/presentation/bloc/get_user_profile/get_user_profile_bloc.dart';
 
 class UserProfile extends StatelessWidget {
   const UserProfile({
@@ -12,46 +11,87 @@ class UserProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User? user;
     return BlocBuilder<GetUserProfileBloc, GetUserProfileState>(
       builder: (context, state) {
         if (state is GetUserProfileSuccess) {
-          user = state.result;
+          final user = state.result;
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    user.name,
+                    style: const TextStyle(
+                      fontSize: 18.0,
+                      color: MyColors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 2,
+                  ),
+                  Text(
+                    user.position,
+                    style: const TextStyle(
+                      fontSize: 12.0,
+                      color: MyColors.white,
+                    ),
+                  ),
+                ],
+              ),
+              const SpaceWidth(),
+              CircleAvatar(
+                backgroundColor: MyColors.white,
+                backgroundImage:
+                    NetworkImage('$urlProfileImage${user.imageUrl}'),
+              ),
+            ],
+          );
         }
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        return const _InitialUserProfile();
+      },
+    );
+  }
+}
+
+class _InitialUserProfile extends StatelessWidget {
+  const _InitialUserProfile();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  user?.name ?? '-',
-                  style: const TextStyle(
-                    fontSize: 18.0,
-                    color: MyColors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 2,
-                ),
-                Text(
-                  user?.position ?? '-',
-                  style: const TextStyle(
-                    fontSize: 12.0,
-                    color: MyColors.white,
-                  ),
-                ),
-              ],
+            Text(
+              '-',
+              style: TextStyle(
+                fontSize: 18.0,
+                color: MyColors.white,
+                fontWeight: FontWeight.bold,
+              ),
+              maxLines: 2,
             ),
-            const SpaceWidth(),
-            CircleAvatar(
-              backgroundColor: MyColors.white,
-              backgroundImage: (user?.imageUrl != null)
-                  ? NetworkImage('$urlProfileImage${user?.imageUrl}')
-                  : null,
+            Text(
+              '-',
+              style: TextStyle(
+                fontSize: 12.0,
+                color: MyColors.white,
+              ),
             ),
           ],
-        );
-      },
+        ),
+        SpaceWidth(),
+        CircleAvatar(
+          backgroundColor: MyColors.white,
+          child: Icon(
+            Icons.person,
+            color: MyColors.black,
+          ),
+        ),
+      ],
     );
   }
 }

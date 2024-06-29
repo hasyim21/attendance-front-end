@@ -7,7 +7,7 @@ import '../../../auth/data/datasources/auth_local_datasource.dart';
 import '../models/note_model.dart';
 
 abstract class NoteRemoteDatasource {
-  Future<List<NoteModel>> getNotes();
+  Future<List<NoteModel>> getNotes(int page, int perPage);
   Future<String> addNote(String title, String note);
   Future<String> updateNote(
     int id,
@@ -26,9 +26,9 @@ class NoteRemoteDatasourceImpl extends NoteRemoteDatasource {
       {required this.client, required this.authLocalDatasource});
 
   @override
-  Future<List<NoteModel>> getNotes() async {
+  Future<List<NoteModel>> getNotes(int page, int perPage) async {
     final token = await authLocalDatasource.getToken();
-    final url = Uri.parse('$mainUrl/api-notes');
+    final url = Uri.parse('$mainUrl/api-notes?page=$page&per_page=$perPage');
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
@@ -41,7 +41,7 @@ class NoteRemoteDatasourceImpl extends NoteRemoteDatasource {
 
     if (response.statusCode == 200) {
       final body = json.decode(response.body);
-      final data = body['notes'] as List;
+      final data = body['data'] as List;
       final notes = data.map((e) => NoteModel.fromMap(e)).toList();
       return notes;
     } else {

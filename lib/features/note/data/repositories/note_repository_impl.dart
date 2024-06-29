@@ -11,9 +11,9 @@ class NoteRepositoryImpl extends NoteRepository {
   NoteRepositoryImpl({required this.noteRemoteDatasource});
 
   @override
-  Future<Either<Failure, List<Note>>> getNotes() async {
+  Future<Either<Failure, List<Note>>> getNotes(int page, int perPage) async {
     try {
-      final result = await noteRemoteDatasource.getNotes();
+      final result = await noteRemoteDatasource.getNotes(page, perPage);
       return Right(result);
     } catch (e) {
       return Left(Failure(message: e.toString()));

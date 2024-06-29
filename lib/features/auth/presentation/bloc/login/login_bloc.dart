@@ -45,6 +45,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             department: user.department,
             faceEmbedding: user.faceEmbedding,
             imageUrl: user.imageUrl,
+            timeIn: user.timeIn,
+            timeOut: user.timeOut,
           );
           await authLocalDatasource.setToken(r.token);
           await authLocalDatasource.setUser(userModel);

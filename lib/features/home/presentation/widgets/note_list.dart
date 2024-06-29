@@ -3,85 +3,96 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
 import '../../../note/presentation/bloc/delete_note/delete_note_bloc.dart';
-import '../../../note/presentation/bloc/get_notes/get_notes_bloc.dart';
-import '../../../note/presentation/pages/add_note_page.dart';
+import '../../../note/presentation/bloc/notes/notes_bloc.dart';
 import '../../../note/presentation/widgets/note_item.dart';
 
-class NoteList extends StatelessWidget {
+class NoteList extends StatefulWidget {
   const NoteList({
     super.key,
   });
 
   @override
+  State<NoteList> createState() => _NoteListState();
+}
+
+class _NoteListState extends State<NoteList> {
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollEvent);
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_scrollEvent)
+      ..dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              "Catatan",
-              style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            MyIconButton(
-              onTap: () => context.push(const AddNotePage()),
-              icon: Icons.add,
-            ),
-          ],
-        ),
-        const SpaceHeight(16.0),
-        BlocListener<DeleteNoteBloc, DeleteNoteState>(
-          listener: (context, state) {
-            if (state is DeleteNoteSuccess) {
-              MySnackbar.show(
-                context,
-                message: 'Catatan berhasil dihapus',
+    return BlocListener<DeleteNoteBloc, DeleteNoteState>(
+      listener: (context, state) {
+        if (state is DeleteNoteSuccess) {
+          MySnackbar.show(
+            context,
+            message: 'Catatan berhasil dihapus',
+          );
+        }
+      },
+      child: BlocBuilder<NotesBloc, NotesState>(
+        builder: (context, state) {
+          switch (state.status) {
+            case NotesStatus.failure:
+              return Center(
+                child: Text(state.message),
               );
-            }
-          },
-          child: BlocBuilder<GetNotesBloc, GetNotesState>(
-            builder: (context, state) {
-              switch (state.runtimeType) {
-                case GetNotesError:
-                  final errorState = state as GetNotesError;
-                  return Center(
-                    child: Text(errorState.failure.message),
-                  );
-                case GetNotesLoading:
-                  return const ShimmerVerticalLoading(
-                    height: 64.0,
-                    isScrolled: false,
-                    usePadding: false,
-                  );
-                case GetNotesSuccess:
-                  final successState = state as GetNotesSuccess;
-                  if (successState.result.isEmpty) {
-                    return const Center(
-                      child: Text('Tidak ada catatan'),
-                    );
-                  }
-                  return ListView.separated(
-                    itemCount: successState.result.length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      final note = successState.result[index];
-                      return NoteItem(note: note);
-                    },
-                    separatorBuilder: (context, index) => const SpaceHeight(),
-                  );
-                default:
-                  return const Center(
-                    child: Text('Tidak ada catatan'),
-                  );
+            case NotesStatus.success:
+              if (state.notes.isEmpty) {
+                return const Center(
+                  child: Text('Tidak ada catatan'),
+                );
               }
-            },
-          ),
-        ),
-      ],
+              return Expanded(
+                child: ListView.separated(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  controller: _scrollController,
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: state.hasReachedMax
+                      ? state.notes.length
+                      : state.notes.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index < state.notes.length) {
+                      final note = state.notes[index];
+                      return NoteItem(note: note);
+                    } else {
+                      return const BottomLoading();
+                    }
+                  },
+                  separatorBuilder: (context, index) => const SpaceHeight(),
+                ),
+              );
+            case NotesStatus.initial:
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+          }
+        },
+      ),
     );
+  }
+
+  void _scrollEvent() {
+    if (_isBottom) context.read<NotesBloc>().add(GetNotesEvent());
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) return false;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll == maxScroll;
   }
 }

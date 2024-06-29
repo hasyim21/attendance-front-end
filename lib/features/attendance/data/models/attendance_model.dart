@@ -23,11 +23,11 @@ class AttendanceModel extends Attendance {
     return AttendanceModel(
       id: attendance["id"],
       userId: attendance["user_id"],
-      date: attendance["date"] ?? "-",
-      timeIn: attendance["time_in"] ?? "-",
-      timeOut: attendance["time_out"] ?? "-",
-      latlonIn: attendance["latlon_in"] ?? "-",
-      latlonOut: attendance["latlon_out"] ?? "-",
+      date: attendance["date"],
+      timeIn: attendance["time_in"],
+      timeOut: attendance["time_out"],
+      latlonIn: attendance["latlon_in"],
+      latlonOut: attendance["latlon_out"],
     );
   }
 
@@ -35,11 +35,11 @@ class AttendanceModel extends Attendance {
     return AttendanceModel(
       id: json["id"],
       userId: json["user_id"],
-      date: json["date"] ?? "-",
-      timeIn: json["time_in"] ?? "-",
-      timeOut: json["time_out"] ?? "-",
-      latlonIn: json["latlon_in"] ?? "-",
-      latlonOut: json["latlon_out"] ?? "-",
+      date: json["date"],
+      timeIn: json["time_in"],
+      timeOut: json["time_out"],
+      latlonIn: json["latlon_in"],
+      latlonOut: json["latlon_out"],
     );
   }
 
@@ -56,7 +56,7 @@ class AttendanceModel extends Attendance {
       };
 
   @override
-  List<Object> get props {
+  List<Object?> get props {
     return [
       id,
       userId,

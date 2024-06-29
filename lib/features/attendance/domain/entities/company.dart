@@ -7,8 +7,7 @@ class Company extends Equatable {
   final String latitude;
   final String longitude;
   final String radiusKm;
-  final String timeIn;
-  final String timeOut;
+  final int lateTolerance;
 
   const Company({
     required this.name,
@@ -17,8 +16,7 @@ class Company extends Equatable {
     required this.latitude,
     required this.longitude,
     required this.radiusKm,
-    required this.timeIn,
-    required this.timeOut,
+    required this.lateTolerance,
   });
 
   @override
@@ -30,13 +28,12 @@ class Company extends Equatable {
       latitude,
       longitude,
       radiusKm,
-      timeIn,
-      timeOut,
+      lateTolerance,
     ];
   }
 
   @override
   String toString() {
-    return 'Company(name: $name, email: $email, address: $address, latitude: $latitude, longitude: $longitude, radiusKm: $radiusKm, timeIn: $timeIn, timeOut: $timeOut)';
+    return 'Company(name: $name, email: $email, address: $address, latitude: $latitude, longitude: $longitude, radiusKm: $radiusKm, lateTolerance: $lateTolerance)';
   }
 }

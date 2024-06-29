@@ -337,7 +337,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
                             if (state is CheckOutSuccess) {
                               context.pushReplacement(
                                 const AttendanceSuccessPage(
-                                  status: 'Berhasil CheckOut',
+                                  status: 'Check Out',
                                 ),
                               );
                             }

@@ -23,7 +23,6 @@ class AttendanceHistoryItem extends StatelessWidget {
         ),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
             height: 67.0,
@@ -57,54 +56,67 @@ class AttendanceHistoryItem extends StatelessWidget {
               ],
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  const Icon(
-                    Icons.arrow_circle_down,
+          const SpaceWidth(12.0),
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.arrow_circle_down,
+                          ),
+                          const SpaceWidth(),
+                          Text(data.timeIn.toFormattedTime()),
+                        ],
+                      ),
+                      const SpaceHeight(),
+                      const Text(
+                        'Check In',
+                        style: TextStyle(
+                          color: MyColors.grey,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SpaceWidth(),
-                  Text(data.timeIn.toFormattedTime()),
-                ],
-              ),
-              const SpaceHeight(),
-              const Text(
-                'Check In',
-                style: TextStyle(
-                  color: MyColors.grey,
                 ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 45.0,
-            child: VerticalDivider(
-              color: Colors.grey.shade300,
-              thickness: 1.0,
+                SizedBox(
+                  height: 45.0,
+                  child: VerticalDivider(
+                    color: Colors.grey.shade300,
+                    thickness: 1.0,
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.arrow_circle_up,
+                          ),
+                          const SpaceWidth(),
+                          Text(data.timeOut?.toFormattedTime() ?? '-- : --'),
+                        ],
+                      ),
+                      const SpaceHeight(),
+                      const Text(
+                        'Check Out',
+                        style: TextStyle(
+                          color: MyColors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  const Icon(
-                    Icons.arrow_circle_up,
-                  ),
-                  const SpaceWidth(),
-                  Text(data.timeOut.toFormattedTime()),
-                ],
-              ),
-              const SpaceHeight(),
-              const Text(
-                'Check Out',
-                style: TextStyle(
-                  color: MyColors.grey,
-                ),
-              ),
-            ],
           ),
         ],
       ),

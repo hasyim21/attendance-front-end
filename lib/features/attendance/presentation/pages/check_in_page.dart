@@ -293,7 +293,7 @@ class _CheckInPageState extends State<CheckInPage> {
                         if (state is CheckInSuccess) {
                           context.pushReplacement(
                             const AttendanceSuccessPage(
-                              status: 'Berhasil Checkin',
+                              status: 'Check In',
                             ),
                           );
                         }
