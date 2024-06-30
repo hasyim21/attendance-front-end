@@ -5,6 +5,7 @@ import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:image/image.dart' as img;
 
 import '../../../../core/core.dart';
+import '../../../../main.dart';
 import '../widgets/face_detector_painter.dart';
 import '../widgets/show_face_registration_dialog.dart';
 
@@ -16,22 +17,26 @@ class RegisterFacePage extends StatefulWidget {
 }
 
 class _RegisterFacePageState extends State<RegisterFacePage> {
-  late List<CameraDescription> _cameras;
   late CameraController _controller;
-  CameraLensDirection _cameraDirection = CameraLensDirection.front;
-  late List<RecognitionEmbedding> recognitions = [];
-  late FaceDetector _detector;
+  late FaceDetector _faceDetector;
   late Recognizer _recognizer;
+
+  CameraDescription _description = cameras[1];
+  CameraLensDirection _cameraDirection = CameraLensDirection.front;
+  final List<RecognitionEmbedding> _recognitions = [];
+
   img.Image? _image;
+  CameraImage? _frame;
   dynamic _scanResults;
-  CameraImage? frame;
-  bool _register = false;
+
   bool _isBusy = false;
+  bool _isCameraInitialized = false;
+  bool _isFaceRegistered = false;
 
   @override
   void initState() {
     super.initState();
-    _detector = FaceDetector(
+    _faceDetector = FaceDetector(
       options: FaceDetectorOptions(performanceMode: FaceDetectorMode.fast),
     );
     _recognizer = Recognizer();
@@ -41,148 +46,26 @@ class _RegisterFacePageState extends State<RegisterFacePage> {
   }
 
   Future<void> _initializeCamera() async {
-    try {
-      _cameras = await availableCameras();
-      _controller = CameraController(
-        _cameraDirection == CameraLensDirection.front
-            ? _cameras[1]
-            : _cameras[0],
-        ResolutionPreset.high,
-      );
-
-      await _controller.initialize();
-      if (!mounted) {
-        return;
-      }
-      _controller.startImageStream((CameraImage image) {
-        if (!_isBusy) {
-          _isBusy = true;
-          frame = image;
-          _doFaceDetectionOnFrame();
-        }
-      });
-      setState(() {});
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error initializing camera: $e');
-      }
-    }
-  }
-
-  Future<void> _reverseCamera() async {
-    setState(() {
-      _cameraDirection = _cameraDirection == CameraLensDirection.back
-          ? CameraLensDirection.front
-          : CameraLensDirection.back;
-    });
-    await _initializeCamera();
-  }
-
-  Future<void> _takePicture() async {
-    try {
-      await _controller.takePicture();
+    cameras = await availableCameras();
+    _controller = CameraController(_description, ResolutionPreset.high);
+    await _controller.initialize().then((_) {
       if (mounted) {
         setState(() {
-          _register = true;
+          _isCameraInitialized = true;
         });
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error taking picture: $e');
-      }
-    }
-  }
 
-  InputImage _getInputImage() {
-    final WriteBuffer allBytes = WriteBuffer();
-    for (final Plane plane in frame!.planes) {
-      allBytes.putUint8List(plane.bytes);
-    }
-    final bytes = allBytes.done().buffer.asUint8List();
-    final Size imageSize =
-        Size(frame!.width.toDouble(), frame!.height.toDouble());
-    final camera = _cameras[1];
-    final imageRotation =
-        InputImageRotationValue.fromRawValue(camera.sensorOrientation);
-
-    final inputImageFormat =
-        InputImageFormatValue.fromRawValue(frame!.format.raw);
-
-    final int bytesPerRow =
-        frame?.planes.isNotEmpty == true ? frame!.planes.first.bytesPerRow : 0;
-
-    final inputImageMetaData = InputImageMetadata(
-      size: imageSize,
-      rotation: imageRotation!,
-      format: inputImageFormat!,
-      bytesPerRow: bytesPerRow,
-    );
-
-    final inputImage =
-        InputImage.fromBytes(bytes: bytes, metadata: inputImageMetaData);
-
-    return inputImage;
-  }
-
-  _doFaceDetectionOnFrame() async {
-    InputImage inputImage = _getInputImage();
-    List<Face> faces = await _detector.processImage(inputImage);
-    _performFaceRecognition(faces);
-  }
-
-  _performFaceRecognition(List<Face> faces) async {
-    recognitions.clear();
-
-    // convert CameraImage to Image and rotate it so that our frame will be in a portrait
-    _image = ImageService.convertYUV420ToImage(frame!);
-    _image = img.copyRotate(_image!,
-        angle: _cameraDirection == CameraLensDirection.front ? 270 : 90);
-
-    for (Face face in faces) {
-      Rect faceRect = face.boundingBox;
-      // crop face
-      img.Image croppedFace = img.copyCrop(_image!,
-          x: faceRect.left.toInt(),
-          y: faceRect.top.toInt(),
-          width: faceRect.width.toInt(),
-          height: faceRect.height.toInt());
-
-      // pass cropped face to face recognition model
-      RecognitionEmbedding recognition =
-          _recognizer.recognize(croppedFace, face.boundingBox);
-
-      recognitions.add(recognition);
-
-      // show face registration dialogue
-      if (_register) {
-        showFaceRegistrationDialogue(
-          context,
-          croppedFace,
-          recognition,
-        );
-        _register = false;
-      }
-    }
-
-    setState(() {
-      _isBusy = false;
-      _scanResults = recognitions;
+      _controller.startImageStream((image) async {
+        if (!_isBusy) {
+          _isBusy = true;
+          _frame = image;
+          await Future.delayed(
+            const Duration(milliseconds: 500),
+          );
+          await _doFaceDetectionOnFrame();
+        }
+      });
     });
-  }
-
-  Widget _buildResult() {
-    if (_scanResults == null || !_controller.value.isInitialized) {
-      return const Center(child: Text('Camera is not initialized'));
-    }
-    final Size imageSize = Size(
-      _controller.value.previewSize!.height,
-      _controller.value.previewSize!.width,
-    );
-    CustomPainter painter =
-        FaceDetectorPainter(imageSize, _scanResults, _cameraDirection);
-    return CustomPaint(
-      painter: painter,
-    );
   }
 
   @override
@@ -193,10 +76,15 @@ class _RegisterFacePageState extends State<RegisterFacePage> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    if (!_controller.value.isInitialized) {
-      return const CircularProgressIndicator();
+    final size = MediaQuery.of(context).size;
+    if (!_isCameraInitialized) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
     }
+
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -216,7 +104,7 @@ class _RegisterFacePageState extends State<RegisterFacePage> {
               left: 0.0,
               width: size.width,
               height: size.height,
-              child: _buildResult(),
+              child: _faceDetectionBox(),
             ),
             Positioned(
               bottom: 5.0,
@@ -229,10 +117,7 @@ class _RegisterFacePageState extends State<RegisterFacePage> {
                   children: [
                     Row(
                       children: [
-                        IconButton(
-                          onPressed: _reverseCamera,
-                          icon: Assets.icons.reverse.svg(width: 48.0),
-                        ),
+                        const SpaceWidth(60.0),
                         const Spacer(),
                         IconButton(
                           onPressed: _takePicture,
@@ -243,7 +128,13 @@ class _RegisterFacePageState extends State<RegisterFacePage> {
                           color: MyColors.red,
                         ),
                         const Spacer(),
-                        const SpaceWidth(48.0)
+                        SizedBox(
+                          width: 60.0,
+                          child: IconButton(
+                            onPressed: _reverseCamera,
+                            icon: Assets.icons.reverse.svg(),
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -253,6 +144,129 @@ class _RegisterFacePageState extends State<RegisterFacePage> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _takePicture() async {
+    try {
+      await _controller.takePicture();
+      if (mounted) {
+        setState(() {
+          _isFaceRegistered = true;
+        });
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error taking picture: $e');
+      }
+    }
+  }
+
+  Future<void> _reverseCamera() async {
+    if (_cameraDirection == CameraLensDirection.back) {
+      _cameraDirection = CameraLensDirection.front;
+      _description = cameras[1];
+    } else {
+      _cameraDirection = CameraLensDirection.back;
+      _description = cameras[0];
+    }
+    await _controller.stopImageStream();
+    setState(() {
+      _controller;
+    });
+
+    _initializeCamera();
+  }
+
+  Future<void> _doFaceDetectionOnFrame() async {
+    InputImage inputImage = _getInputImage();
+    List<Face> faces = await _faceDetector.processImage(inputImage);
+    _performFaceRecognition(faces);
+  }
+
+  Future<void> _performFaceRecognition(List<Face> faces) async {
+    _recognitions.clear();
+
+    _image = ImageService.convertYUV420ToImage(_frame!);
+    _image = img.copyRotate(_image!,
+        angle: _cameraDirection == CameraLensDirection.front ? 270 : 90);
+
+    for (Face face in faces) {
+      Rect faceRect = face.boundingBox;
+
+      img.Image croppedFace = img.copyCrop(_image!,
+          x: faceRect.left.toInt(),
+          y: faceRect.top.toInt(),
+          width: faceRect.width.toInt(),
+          height: faceRect.height.toInt());
+
+      RecognitionEmbedding recognition =
+          _recognizer.recognize(croppedFace, face.boundingBox);
+
+      _recognitions.add(recognition);
+
+      if (_isFaceRegistered) {
+        showFaceRegistrationDialogue(
+          context,
+          croppedFace,
+          recognition,
+        );
+        _isFaceRegistered = false;
+      }
+    }
+
+    setState(() {
+      _isBusy = false;
+      _scanResults = _recognitions;
+    });
+  }
+
+  InputImage _getInputImage() {
+    final WriteBuffer allBytes = WriteBuffer();
+    for (final Plane plane in _frame!.planes) {
+      allBytes.putUint8List(plane.bytes);
+    }
+    final bytes = allBytes.done().buffer.asUint8List();
+    final Size imageSize =
+        Size(_frame!.width.toDouble(), _frame!.height.toDouble());
+    final camera = _description;
+    final imageRotation =
+        InputImageRotationValue.fromRawValue(camera.sensorOrientation);
+
+    final inputImageFormat =
+        InputImageFormatValue.fromRawValue(_frame!.format.raw);
+
+    final int bytesPerRow = _frame?.planes.isNotEmpty == true
+        ? _frame!.planes.first.bytesPerRow
+        : 0;
+
+    final inputImageMetaData = InputImageMetadata(
+      size: imageSize,
+      rotation: imageRotation!,
+      format: inputImageFormat!,
+      bytesPerRow: bytesPerRow,
+    );
+
+    final inputImage =
+        InputImage.fromBytes(bytes: bytes, metadata: inputImageMetaData);
+
+    return inputImage;
+  }
+
+  Widget _faceDetectionBox() {
+    if (_scanResults == null || !_controller.value.isInitialized) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    final Size imageSize = Size(
+      _controller.value.previewSize!.height,
+      _controller.value.previewSize!.width,
+    );
+    CustomPainter painter =
+        FaceDetectorPainter(imageSize, _scanResults, _cameraDirection);
+    return CustomPaint(
+      painter: painter,
     );
   }
 }

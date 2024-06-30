@@ -24,7 +24,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
   late Recognizer _recognizer;
 
   CameraDescription _description = cameras[1];
-  CameraLensDirection _camDirec = CameraLensDirection.front;
+  CameraLensDirection _cameraDirection = CameraLensDirection.front;
   final List<RecognitionEmbedding> _recognitions = [];
 
   img.Image? _image;
@@ -45,11 +45,13 @@ class _CheckOutPageState extends State<CheckOutPage> {
       options: FaceDetectorOptions(performanceMode: FaceDetectorMode.fast),
     );
     _recognizer = Recognizer();
-    _initializeCamera();
-    _getCurrentPosition();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeCamera();
+      _getCurrentPosition();
+    });
   }
 
-  _initializeCamera() async {
+  Future<void> _initializeCamera() async {
     cameras = await availableCameras();
     _controller = CameraController(_description, ResolutionPreset.high);
     await _controller.initialize().then((_) {
@@ -201,12 +203,12 @@ class _CheckOutPageState extends State<CheckOutPage> {
         );
   }
 
-  void _reverseCamera() async {
-    if (_camDirec == CameraLensDirection.back) {
-      _camDirec = CameraLensDirection.front;
+  Future<void> _reverseCamera() async {
+    if (_cameraDirection == CameraLensDirection.back) {
+      _cameraDirection = CameraLensDirection.front;
       _description = cameras[1];
     } else {
-      _camDirec = CameraLensDirection.back;
+      _cameraDirection = CameraLensDirection.back;
       _description = cameras[0];
     }
     await _controller.stopImageStream();
@@ -214,21 +216,27 @@ class _CheckOutPageState extends State<CheckOutPage> {
       _controller;
     });
 
-    _initializeCamera();
+    await _initializeCamera();
   }
 
-  _doFaceDetectionOnFrame() async {
+  Future<void> _doFaceDetectionOnFrame() async {
     InputImage inputImage = _getInputImage();
     List<Face> faces = await _faceDetector.processImage(inputImage);
-    _performFaceRecognition(faces);
+    if (faces.isEmpty) {
+      setState(() {
+        _isFaceRegistered = false;
+        _faceStatusMessage = 'Wajah tidak terdeteksi';
+      });
+    }
+    await _performFaceRecognition(faces);
   }
 
-  _performFaceRecognition(List<Face> faces) async {
+  Future<void> _performFaceRecognition(List<Face> faces) async {
     _recognitions.clear();
 
     _image = ImageService.convertYUV420ToImage(_frame!);
     _image = img.copyRotate(_image!,
-        angle: _camDirec == CameraLensDirection.front ? 270 : 90);
+        angle: _cameraDirection == CameraLensDirection.front ? 270 : 90);
 
     for (Face face in faces) {
       Rect faceRect = face.boundingBox;
@@ -326,7 +334,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
       _controller.value.previewSize!.width,
     );
     CustomPainter painter =
-        FaceDetectorPainter(imageSize, _scanResults, _camDirec);
+        FaceDetectorPainter(imageSize, _scanResults, _cameraDirection);
     return CustomPaint(
       painter: painter,
     );
