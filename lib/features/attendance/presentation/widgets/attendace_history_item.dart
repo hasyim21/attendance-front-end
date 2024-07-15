@@ -71,7 +71,7 @@ class AttendanceHistoryItem extends StatelessWidget {
                             Icons.arrow_circle_down,
                           ),
                           const SpaceWidth(),
-                          Text(data.timeIn.toFormattedTime()),
+                          Text(data.timeIn?.toFormattedTime() ?? '-- : --'),
                         ],
                       ),
                       const SpaceHeight(),

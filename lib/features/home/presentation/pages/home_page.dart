@@ -196,14 +196,14 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    // if (!_isLateToCheckIn(user.timeIn)) {
-    //   MySnackbar.show(
-    //     context,
-    //     message: 'Gagal Check In!. Anda sudah telat!',
-    //     backgroundColor: MyColors.red,
-    //   );
-    //   return;
-    // }
+    if (!_isLateToCheckIn(user.timeIn)) {
+      MySnackbar.show(
+        context,
+        message: 'Gagal Check In!. Anda sudah telat!',
+        backgroundColor: MyColors.red,
+      );
+      return;
+    }
 
     if (await _isLocationMocked()) return;
     if (!await _isWithinCompanyRadius()) return;
@@ -218,15 +218,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _checkOut(User user) async {
-    // if (attendanceStatus!.checkedin == false) {
-    //   MySnackbar.show(
-    //     context,
-    //     message: 'Anda belum melakukan Check In',
-    //     backgroundColor: MyColors.red,
-    //   );
-    //   return;
-    // }
-
     if (attendanceStatus!.checkedout == true) {
       MySnackbar.show(
         context,
@@ -236,14 +227,14 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    // if (!_isTimeToCheckOut(user.timeOut)) {
-    //   MySnackbar.show(
-    //     context,
-    //     message: 'Gagal Check Out!.Belum waktunya Check Out!',
-    //     backgroundColor: MyColors.red,
-    //   );
-    //   return;
-    // }
+    if (!_isTimeToCheckOut(user.timeOut)) {
+      MySnackbar.show(
+        context,
+        message: 'Belum waktunya Check Out!',
+        backgroundColor: MyColors.red,
+      );
+      return;
+    }
 
     if (await _isLocationMocked()) return;
     if (!await _isWithinCompanyRadius()) return;

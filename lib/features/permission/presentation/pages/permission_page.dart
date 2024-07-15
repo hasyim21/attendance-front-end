@@ -122,7 +122,8 @@ class _PermissionPageState extends State<PermissionPage> {
                         ),
                         controller: _scrollController,
                         physics: const BouncingScrollPhysics(),
-                        itemCount: state.hasReachedMax
+                        itemCount: (state.hasReachedMax ||
+                                state.permissions.length < state.perPage)
                             ? state.permissions.length
                             : state.permissions.length + 1,
                         itemBuilder: (context, index) {

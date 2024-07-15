@@ -61,7 +61,8 @@ class _NoteListState extends State<NoteList> {
                   padding: const EdgeInsets.only(bottom: 16.0),
                   controller: _scrollController,
                   physics: const BouncingScrollPhysics(),
-                  itemCount: state.hasReachedMax
+                  itemCount: (state.hasReachedMax ||
+                          state.notes.length < state.perPage)
                       ? state.notes.length
                       : state.notes.length + 1,
                   itemBuilder: (context, index) {
