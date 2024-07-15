@@ -13,9 +13,9 @@ class Attendance extends Equatable {
     required this.id,
     required this.userId,
     required this.date,
-    required this.timeIn,
+    this.timeIn,
     this.timeOut,
-    required this.latlonIn,
+    this.latlonIn,
     this.latlonOut,
   });
 
